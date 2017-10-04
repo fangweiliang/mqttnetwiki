@@ -64,3 +64,14 @@ while (true)
 }
 ```
 
+# WebSocket connection
+In order to use a web socket channel the options have to be changed. The following example shows the _MqttClientOptions_ for a _WebSocket_ connection with the free test broker at _hive.mq.org_:
+
+```csharp
+var options = new MqttClientOptions
+{
+   Server = "broker.hivemq.com:8000/mqtt",
+   ConnectionType = MqttConnectionType.Ws
+};
+```
+The _Port_ property cannot be used for _WebSocket_ connections at the moment. So the port must be part of the full URI which is stored at the _Server_ property.
