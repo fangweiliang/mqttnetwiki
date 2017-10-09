@@ -1,1 +1,0 @@
-The following code shows how to establish a TCP based connection:
