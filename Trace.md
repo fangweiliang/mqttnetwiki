@@ -3,7 +3,7 @@ Debug messages for the _MqttClient_ and _MqttServer_ can be attached using a sta
 ```csharp
 MqttNetTrace.TraceMessagePublished += (s, e) =>
 {
-    Console.WriteLine($">> [{e.ThreadId}] [{e.Source}] [{e.Level}]: {e.Message}");
+    Console.WriteLine($">> [{DateTime.Now:O}] [{e.ThreadId}] [{e.Source}] [{e.Level}]: {e.Message}");
     if (e.Exception != null)
     {
         Console.WriteLine(e.Exception);
