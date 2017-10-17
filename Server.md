@@ -38,3 +38,16 @@ var options = new MqttServerOptions
     }
 };
 ```
+
+# Using a certificate
+In order to use an encrypted connection a certificate __including__ the private key is required. The following code shows how to start a server using a certificate for encryption:
+```csharp
+var certificate = new X509Certificate(@"C:\certs\test\test.cer", "");
+options.TlsEndpointOptions.Certificate = certificate.Export(X509ContentType.Cert);
+```
+
+But also other overloads getting a valid certificate blob (byte array) can be used.
+
+For creating a self signed certificate for testing the following command can be used (Windows SDK must be installed):
+
+`makecert.exe -sky exchange -r -n "CN=selfsigned.crt" -pe -a sha1 -len 2048 -ss My "test.cer"`
