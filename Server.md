@@ -45,9 +45,44 @@ In order to use an encrypted connection a certificate __including__ the private 
 var certificate = new X509Certificate(@"C:\certs\test\test.cer", "");
 options.TlsEndpointOptions.Certificate = certificate.Export(X509ContentType.Cert);
 ```
-
 But also other overloads getting a valid certificate blob (byte array) can be used.
 
 For creating a self signed certificate for testing the following command can be used (Windows SDK must be installed):
 
 `makecert.exe -sky exchange -r -n "CN=selfsigned.crt" -pe -a sha1 -len 2048 -ss My "test.cer"`
+
+# Saving retained messages
+The server supports retained MQTT messages. Those messages are kept and send to clients when they connect and subscribe to them. It is also supported to save all retained messages and loading them after the server has started. This required implementing an interface. The following code shows how to serialize retained messages as JSON:
+```csharp
+// Setting the options
+options.Storage = new RetainedMessageHandler();
+
+// The implementation of the storage:
+// This code uses the JSON library "Newtonsoft.Json".
+public class RetainedMessageHandler : IMqttServerStorage
+{
+    private const string Filename = "C:\\MQTT\\RetainedMessages.json";
+
+    public Task SaveRetainedMessagesAsync(IList<MqttApplicationMessage> messages)
+    {
+        File.WriteAllText(Filename, JsonConvert.SerializeObject(messages));
+        return Task.FromResult(0);
+    }
+
+    public Task<IList<MqttApplicationMessage>> LoadRetainedMessagesAsync()
+    {
+        IList<MqttApplicationMessage> retainedMessages;
+        if (File.Exists(Filename))
+        {
+            var json = File.ReadAllText(Filename);
+            retainedMessages = JsonConvert.DeserializeObject<List<MqttApplicationMessage>>(json);
+        }
+        else
+        {
+            retainedMessages = new List<MqttApplicationMessage>();
+        }
+            
+        return Task.FromResult(retainedMessages);
+    }
+}
+```
