@@ -21,12 +21,11 @@ public class CustomTraceHandler : IMqttNetTraceHandler
     public CustomTraceHandler(string clientId)
     {
         _clientId = clientId;
-        TraceMessageHandler = HandleTraceMessage;
     }
 
-    public Action<MqttNetTraceMessage> TraceMessageHandler { get; }
+    public bool IsEnabled { get; } = true;
 
-    private void HandleTraceMessage(MqttNetTraceMessage traceMessage)
+    public void HandleTraceMessage(MqttNetTraceMessage traceMessage)
     {
         // Client ID is added to the trace message.
         Console.WriteLine($">> [{_clientId}] [{traceMessage.Timestamp:O}] [{traceMessage.ThreadId}] [{traceMessage.Source}] [{traceMessage.Level}]: {traceMessage.Message}");
