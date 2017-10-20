@@ -51,6 +51,9 @@ For creating a self signed certificate for testing the following command can be 
 
 `makecert.exe -sky exchange -r -n "CN=selfsigned.crt" -pe -a sha1 -len 2048 -ss My "test.cer"`
 
+# Publishing messages
+The server is also able to publish MQTT application messages. The object is the same as for the client implementation. Due to the fact that the server is able to publish its own messages it is not required having a loopback connection at the same process. Also this allows integrating the server into a Windows IoT Core UWP app. This platform has a network isolation which makes it impossible to communicate via localhost etc. Examples for publishing a message are described at the client section of this Wiki.
+
 # Saving retained messages
 The server supports retained MQTT messages. Those messages are kept and send to clients when they connect and subscribe to them. It is also supported to save all retained messages and loading them after the server has started. This required implementing an interface. The following code shows how to serialize retained messages as JSON:
 ```csharp
