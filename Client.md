@@ -103,3 +103,22 @@ mqttClient.ApplicationMessageReceived += (s, e) =>
     Console.WriteLine();
 };
 ```
+
+# Publishing messages
+Application messages can be created using the constructor directly or via using the _MqttApplicationMessageBuilder_. This class has some useful overloads which allows dealing with different payload formats easily. The API of the builder is a _fluent API_. The following code shows how to compose an application message and publishing them:
+```csharp
+var message = new MqttApplicationMessageBuilder()
+    .WithTopic("MyTopic")
+    .WithPayload("Hello World")
+    .WithExactlyOnceQoS()
+    .WithRetainFlag()
+    .Build();
+
+await client.PublishAsync(message);
+```
+It is not required to fill all properties of an application message. The following code shows how to create a very basic application message:
+```csharp
+var message = new MqttApplicationMessageBuilder()
+    .WithTopic("/MQTTnet/is/awesome")
+    .Build();
+```
