@@ -58,6 +58,11 @@ This allows also running the server in a Windows IoT Core UWP app. This platform
 
 Examples for publishing a message are described at the client section of this Wiki.
 
+# Consuming messages
+The server is also able to process every application message which was published by any client. The event _ApplicationMessageReceived_ will be fired for every processed message. It has the same format as for the client but additionally has the _ClientId_. 
+
+Details for consuming a application messages are described at the client section of this Wiki.
+
 # Saving retained messages
 The server supports retained MQTT messages. Those messages are kept and send to clients when they connect and subscribe to them. It is also supported to save all retained messages and loading them after the server has started. This required implementing an interface. The following code shows how to serialize retained messages as JSON:
 ```csharp
