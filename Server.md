@@ -63,7 +63,7 @@ The server is also able to process every application message which was published
 
 Details for consuming a application messages are described at the client section of this Wiki.
 
-# Saving retained messages
+# Saving retained application messages
 The server supports retained MQTT messages. Those messages are kept and send to clients when they connect and subscribe to them. It is also supported to save all retained messages and loading them after the server has started. This required implementing an interface. The following code shows how to serialize retained messages as JSON:
 ```csharp
 // Setting the options
@@ -97,4 +97,17 @@ public class RetainedMessageHandler : IMqttServerStorage
         return Task.FromResult(retainedMessages);
     }
 }
+```
+# Intercepting application messages
+A custom interceptor can be set at the server options. This interceptor is called for __every__ application message which is received by the server. This allows extending application messages __before__ they are persisted (in case of a retained message) __and before__ being dispatched to subscribers. This allows use cases like adding a time stamp to every application message if the hardware device does not know the time or time zone etc. The following code shows how to use the interceptor:
+```csharp
+options.ApplicationMessageInterceptor = message =>
+{
+    if (MqttTopicFilterComparer.IsMatch(message.Topic, "/myTopic/WithTimestamp/#"))
+    {
+        // Replace the payload with the timestamp. But also extending a JSON 
+        // based payload with the timestamp is a suitable use case.
+        message.Payload = Encoding.UTF8.GetBytes(DateTime.Now.ToString("O"));
+    }
+};
 ```
