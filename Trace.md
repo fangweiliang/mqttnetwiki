@@ -1,4 +1,7 @@
 # Simple trace
+
+## before version 2.5
+
 Debug messages for the _MqttClient_ and _MqttServer_ can be attached using a static event. The following code shows how to write all trace messages to the console window:
 
 ```csharp
@@ -11,8 +14,26 @@ MqttNetTrace.TraceMessagePublished += (s, e) =>
     }
 };
 ```
+## from Version 2.5 on
+
+With Version 2.5 Microsoft.Extensions.Logging was introduced. If you use MqttFactory to create your server or client MqttNetTrace works just like before. If you use the service collection approach and want to use MqttNetTrace to consume Logging events you have to register MqttNetTrace in the ILoggerFactory. For more details about Microsoft.Extensions.Logging have a look at https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging?tabs=aspnetcore2x
+
+```csharp
+var services = new ServiceCollection()
+    .AddMqttClient()
+    .BuildServiceProvider();
+
+services.GetRequiredService<ILoggerFactory>()
+    .AddMqttTrace();
+```
+
+
 # Advanced trace
-For use cases where multiple clients are running and trace messages must be separated from each other it is possible to inject a custom trace handler. This must be done at factory level of the client or server. The following code shows a custom trace handler:
+For use cases where multiple clients are running and trace messages must be separated from each other there are advanced capabilities.
+
+## before version 2.5
+
+It is possible to inject a custom trace handler. This must be done at factory level of the client or server. The following code shows a custom trace handler:
 ```csharp
 public class CustomTraceHandler : IMqttNetTraceHandler
 {
@@ -40,3 +61,8 @@ This above trace handler can be injected into a client or server using the follo
 ```csharp
 var client = new MqttClientFactory().CreateMqttClient(new CustomTraceHandler("Client 1"));
 ```
+
+## from Version 2.5 on
+
+The information of the used clientId is present on the Scope property of the LogMessage. For more information about log scopes have a look at https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging?tabs=aspnetcore2x
+  
