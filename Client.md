@@ -127,6 +127,22 @@ mqttClient.Disconnected += async (s, e) =>
 };
 ```
 
+# Subscribing to a topic
+Here's an example of subscribing to catch all messages:
+~~~csharp
+client.Connected += async (s, e) =>
+{
+	Console.WriteLine("### CONNECTED WITH SERVER ###");
+
+	await client.SubscribeAsync(new List<TopicFilter>
+	{
+		new TopicFilter("#", MqttQualityOfServiceLevel.AtMostOnce)
+	});
+
+	Console.WriteLine("### SUBSCRIBED ###");
+};
+~~~
+
 # Consuming messages
 The following code shows how to handle incoming messages:
 ```csharp
