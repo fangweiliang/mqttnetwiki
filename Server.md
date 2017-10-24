@@ -1,5 +1,8 @@
 # Preparation
 The following code is required to run a simple MQTT server (broker) with default options (Port etc.):
+
+## before version 2.5
+
 ```csharp
 var options = new MqttServerOptions();
 
@@ -11,6 +14,48 @@ Console.ReadLine();
 
 await mqttServer.StopAsync();
 ```
+
+## from Version 2.5 on
+
+With Version 2.5 Microsoft.Extensions.DependencyInjection was introduced so you have two options for creating the server now. 
+
+### Option a 
+
+Use the new MqttFactory that knows all services Mqtt needs.
+
+```csharp
+var mqttServer = new MqttFactory().CreateMqttServer();
+await mqttServer.StartAsync();
+
+Console.WriteLine("Press any key to exit.");
+Console.ReadLine();
+
+await mqttServer.StopAsync();
+```
+
+### Option b
+
+Use a service collection.
+
+```csharp
+//setup
+var services = new ServiceCollection()
+    .AddMqttServer(options => 
+    {
+       //modify options here
+    })
+    .BuildServiceProvider();
+
+//use 
+var mqttServer = services.GetRequiredService<IMqttServer>();
+await mqttServer.StartAsync();
+
+Console.WriteLine("Press any key to exit.");
+Console.ReadLine();
+
+await mqttServer.StopAsync();
+```
+
 
 # Validating MQTT clients
 The following code shows how to validate an incoming MQTT client connection request:
