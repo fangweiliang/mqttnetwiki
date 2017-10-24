@@ -1,8 +1,45 @@
 # Preparation
 The following code is required to setup a MQTT client:
+
+## before version 2.5
 ```csharp
 var mqttClient = new MqttClientFactory().CreateMqttClient();
 ```
+## from Version 2.5 on
+
+With Version 2.5 Microsoft.Extensions.DependencyInjection was introduced so you have two options for creating the client now. 
+
+### Option a 
+
+Use the new MqttFactory that knows all services Mqtt needs.
+
+```csharp
+var mqttClient = new MqttFactory().CreateMqttClient();
+```
+
+### Option b
+
+Use a service collection and constructor injection. 
+
+```csharp
+//setup
+var services = new ServiceCollection()
+    .AddMqttClient()
+    .BuildServiceProvider();
+
+//use 
+var mqttClient = services.GetRequiredService<IMqttClient>();
+
+//or
+public class ServiceClass
+{
+    ServiceClass(IMqttClient mqttclient) 
+    {
+    }
+}
+
+```
+
 
 # TCP connection
 The following code shows the options for a regular TCP connection to a MQTT server (broker):
