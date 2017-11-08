@@ -30,7 +30,7 @@ public class ServiceClass
 ```
 
 # Client options
-All options for the MQTT client are bundled in one class named _MqttClientOptions_. It is possible to fill options manually in code via the properties but it is recommended to use the _MqttClientOptionsBuilder_. This class provides a fluent API and allows setting the options easily by providing several overloads and helper methods. The following code shows how to use the builder with several random options.
+All options for the MQTT client are bundled in one class named _MqttClientOptions_. It is possible to fill options manually in code via the properties but it is recommended to use the _MqttClientOptionsBuilder_. This class provides a _fluent API_ and allows setting the options easily by providing several overloads and helper methods. The following code shows how to use the builder with several random options.
 ```csharp
 // Create TCP based options using the builder.
 var options = new MqttClientOptionsBuilder()
@@ -125,23 +125,6 @@ mqttClient.Disconnected += async (s, e) =>
     }
 };
 ```
-
-# Subscribing to a topic
-Here's an example of subscribing to catch all messages:
-~~~csharp
-client.Connected += async (s, e) =>
-{
-	Console.WriteLine("### CONNECTED WITH SERVER ###");
-
-	await client.SubscribeAsync(new List<TopicFilter>
-	{
-		new TopicFilter("#", MqttQualityOfServiceLevel.AtMostOnce)
-	});
-
-	Console.WriteLine("### SUBSCRIBED ###");
-};
-~~~
-
 # Consuming messages
 The following code shows how to handle incoming messages:
 ```csharp
@@ -156,8 +139,22 @@ mqttClient.ApplicationMessageReceived += (s, e) =>
 };
 ```
 
+# Subscribing to a topic
+Once a connection with the server is established subscribing to a topic is possible. The following code shows how to subscribe to a topic after the MQTT client has connected.
+~~~csharp
+client.Connected += async (s, e) =>
+{
+    Console.WriteLine("### CONNECTED WITH SERVER ###");
+
+    // Subscribe to a topic
+    await mqttClient.SubscribeAsync(new TopicFilterBuilder().WithTopic("my/topic").Build());
+
+    Console.WriteLine("### SUBSCRIBED ###");
+};
+~~~
+
 # Publishing messages
-Application messages can be created using the constructor directly or via using the _MqttApplicationMessageBuilder_. This class has some useful overloads which allows dealing with different payload formats easily. The API of the builder is a _fluent API_. The following code shows how to compose an application message and publishing them:
+Application messages can be created using the properties directly or via using the _MqttApplicationMessageBuilder_. This class has some useful overloads which allows dealing with different payload formats easily. The API of the builder is a _fluent API_. The following code shows how to compose an application message and publishing them:
 ```csharp
 var message = new MqttApplicationMessageBuilder()
     .WithTopic("MyTopic")
