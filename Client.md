@@ -1,36 +1,25 @@
 # Preparation
-The following code is required to setup a MQTT client:
+This library uses the library _Microsoft.Extensions.DependencyInjection_ for DI which allows creating a MQTT client in several ways
 
-## before version 2.5
+The following code shows how to create a new MQTT client in the most simple way using the _MqttFactory_.
 ```csharp
-var mqttClient = new MqttClientFactory().CreateMqttClient();
-```
-## from Version 2.5 on
-
-With Version 2.5 Microsoft.Extensions.DependencyInjection was introduced so you have two options for creating the client now. 
-
-### Option a 
-
-Use the new MqttFactory that knows all services Mqtt needs.
-
-```csharp
-var mqttClient = new MqttFactory().CreateMqttClient();
+// Create a new MQTT client
+var factory = new MqttFactory();
+var client = factory.CreateMqttClient();
 ```
 
-### Option b
-
-Use a service collection and constructor injection. 
-
+It is also possible to use the service provider from the DI library directly and get an instance of the MQTT client. The following code shows how to use the service provider approach.
 ```csharp
-//setup
-var services = new ServiceCollection()
+// Create a client from the service provider manually.
+var serviceProvider = new ServiceCollection()
     .AddMqttClient()
     .BuildServiceProvider();
 
-//use 
-var mqttClient = services.GetRequiredService<IMqttClient>();
+var mqttClient = serviceProvider.GetRequiredService<IMqttClient>();
+```
 
-//or
+At least it is possible to let the DI inject the MQTT client in other services. In order to use this the _IMqttClient_ interface must be used as a parameter for the constructor. The following code shows how to declare the MQTT client for DI.
+```csharp
 public class ServiceClass
 {
     ServiceClass(IMqttClient mqttclient) 
@@ -38,6 +27,19 @@ public class ServiceClass
     }
 }
 
+```
+
+# Client options
+All options for the MQTT client are bundled in one class named _MqttClientOptions_. It is possible to fill options manually in code via the properties but it is recommended to use the _MqttClientOptionsBuilder_. This class provides a fluent API and allows setting the options easily by providing several overloads and helper methods. The following code shows how to use the builder with several random options.
+```csharp
+// Create TCP based options using the builder
+var options = new MqttClientOptionsBuilder()
+    .WithClientId("Client1")
+    .WithTcpServer("broker.hivemq.com")
+    .WithCredentials("bud", "%spencer%")
+    .WithTls()
+    .WithCleanSession()
+    .Build();
 ```
 
 
