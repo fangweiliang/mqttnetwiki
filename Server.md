@@ -1,68 +1,58 @@
 # Preparation
-The following code is required to run a simple MQTT server (broker) with default options (Port etc.):
-
-## before version 2.5
-
+Creating a MQTT server is similar to creating a MQTT client. The following code shows the most simple way of creating a new MQTT server with a TCP endpoint which is listening at the default port 1883.
 ```csharp
-var options = new MqttServerOptions();
-
-var mqttServer = new MqttServerFactory().CreateMqttServer(options);
-await mqttServer.StartAsync();
-
-Console.WriteLine("Press any key to exit.");
-Console.ReadLine();
-
-await mqttServer.StopAsync();
-```
-
-## from Version 2.5 on
-
-With Version 2.5 Microsoft.Extensions.DependencyInjection was introduced so you have two options for creating the server now. 
-
-### Option a 
-
-Use the new MqttFactory that knows all services Mqtt needs.
-
-```csharp
+// Start a MQTT server.
 var mqttServer = new MqttFactory().CreateMqttServer();
 await mqttServer.StartAsync();
-
 Console.WriteLine("Press any key to exit.");
 Console.ReadLine();
-
 await mqttServer.StopAsync();
 ```
 
-### Option b
+Setting several options for the MQTT server is possible by providing a configuration callback. This callback exposes all available options which can be set within the callback. The following code shows how to setup a MQTT server.
+```csharp
+// Configure MQTT server.
+var mqttServer = new MqttFactory().CreateMqttServer(options =>
+{
+    options.ConnectionBacklog = 100;
+    options.DefaultEndpointOptions.Port = 1884;
+    options.ConnectionValidator = packet =>
+    {
+        if (packet.ClientId != "Highlander")
+        {
+            return MqttConnectReturnCode.ConnectionRefusedIdentifierRejected;
+        }
 
-Use a service collection.
+        return MqttConnectReturnCode.ConnectionAccepted;
+    };
+});
+```
 
+It is also possible to use the service collection of the DI directly. The following code shows how to use the DI components directly.
 ```csharp
 //setup
 var services = new ServiceCollection()
     .AddMqttServer(options => 
     {
-       //modify options here
+       // modify options here
     })
     .BuildServiceProvider();
 
 //use 
 var mqttServer = services.GetRequiredService<IMqttServer>();
 await mqttServer.StartAsync();
-
 Console.WriteLine("Press any key to exit.");
 Console.ReadLine();
-
 await mqttServer.StopAsync();
 ```
-
 
 # Validating MQTT clients
 The following code shows how to validate an incoming MQTT client connection request:
 ```csharp
-var options = new MqttServerOptions
+// Setup client validator.
+var mqttServer = new MqttFactory().CreateMqttServer(options =>
 {
-    ConnectionValidator = c =>
+    options.ConnectionValidator = c =>
     {
         if (c.ClientId.Length < 10)
         {
@@ -80,8 +70,8 @@ var options = new MqttServerOptions
         }
 
         return MqttConnectReturnCode.ConnectionAccepted;
-    }
-};
+    };
+});
 ```
 
 # Using a certificate
@@ -146,15 +136,49 @@ public class RetainedMessageHandler : IMqttServerStorage
 # Intercepting application messages
 A custom interceptor can be set at the server options. This interceptor is called for __every__ application message which is received by the server. This allows extending application messages __before__ they are persisted (in case of a retained message) __and before__ being dispatched to subscribers. This allows use cases like adding a time stamp to every application message if the hardware device does not know the time or time zone etc. The following code shows how to use the interceptor:
 ```csharp
-options.ApplicationMessageInterceptor = message =>
+// Extend the timestamp for all messages from clients.
+options.ApplicationMessageInterceptor = context =>
 {
-    if (MqttTopicFilterComparer.IsMatch(message.Topic, "/myTopic/WithTimestamp/#"))
+    if (MqttTopicFilterComparer.IsMatch(context.ApplicationMessage.Topic, "/myTopic/WithTimestamp/#"))
     {
         // Replace the payload with the timestamp. But also extending a JSON 
         // based payload with the timestamp is a suitable use case.
-        message.Payload = Encoding.UTF8.GetBytes(DateTime.Now.ToString("O"));
+        context.ApplicationMessage.Payload = Encoding.UTF8.GetBytes(DateTime.Now.ToString("O"));
+    }
+};
+```
+
+# Intercepting subscriptions
+A custom interceptor can be set to control which topics can be subscribed by a MQTT client. This allows moving private API-Topics to a protected are which is only available for certain clients. The following code shows how to use the subscription interceptor.
+```csharp
+// Protect several topics from being subscribed from every client.
+options.SubscriptionsInterceptor = context =>
+{
+    if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
+    {
+        context.AcceptSubscription = false;
     }
 
-    return message;
+    if (context.TopicFilter.Topic.StartsWith("the/secret/stuff") && context.ClientId != "Imperator")
+    {
+        context.AcceptSubscription = false;
+        context.CloseConnection = true;
+    }
 };
+```
+
+# WebSocket endpoint
+This library also has support for a WebSocket based server which is integrated into ASP.NET Core 2.0. This functionality requires an additional library called _MQTTnet.AspNetCore_. After adding this library a MQTT server can be added to a Kestrel HTTP server. The following code shows how to configure the WebSocket endpoint.
+```csharp
+// In class _Startup_ of the ASP.NET Core 2.0 project.
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddHostedMqttServer();
+}
+
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    app.UseMqttEndpoint();
+    // other stuff
+}
 ```
