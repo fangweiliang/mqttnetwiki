@@ -3,9 +3,9 @@ This library uses the library _Microsoft.Extensions.DependencyInjection_ for DI 
 
 The following code shows how to create a new MQTT client in the most simple way using the _MqttFactory_.
 ```csharp
-// Create a new MQTT client
+// Create a new MQTT client.
 var factory = new MqttFactory();
-var client = factory.CreateMqttClient();
+var mqttClient = factory.CreateMqttClient();
 ```
 
 It is also possible to use the service provider from the DI library directly and get an instance of the MQTT client. The following code shows how to use the service provider approach.
@@ -32,7 +32,7 @@ public class ServiceClass
 # Client options
 All options for the MQTT client are bundled in one class named _MqttClientOptions_. It is possible to fill options manually in code via the properties but it is recommended to use the _MqttClientOptionsBuilder_. This class provides a fluent API and allows setting the options easily by providing several overloads and helper methods. The following code shows how to use the builder with several random options.
 ```csharp
-// Create TCP based options using the builder
+// Create TCP based options using the builder.
 var options = new MqttClientOptionsBuilder()
     .WithClientId("Client1")
     .WithTcpServer("broker.hivemq.com")
@@ -42,34 +42,23 @@ var options = new MqttClientOptionsBuilder()
     .Build();
 ```
 
-
 # TCP connection
-The following code shows the options for a regular TCP connection to a MQTT server (broker):
+The following code shows how to set the options of the MQTT client to make use of a TCP based connection.
 ```csharp
-var tcpOptions = new MqttClientTcpOptions
-{
-    Server = "broker.hivemq.org",
-    ClientId = "TestClient"
-};
-
-await mqttClient.ConnectAsync(tcpOptions);
+// Use TCP connection.
+var options = new MqttClientOptionsBuilder()
+    .WithTcpServer("broker.hivemq.com", 1883) // Port is optional
+    .Build();
 ```
 
-# Using a secure TCP connection
+# Secure TCP connection
 The following code shows how to use a TLS secured TCP connection (properties are only set as reference):
 ```csharp
-var secureTcpOptions = new MqttClientTcpOptions
-{
-    Server = "broker.hivemq.org",
-    ClientId = "TestClient",
-    TlsOptions = new MqttClientTlsOptions
-    {
-        UseTls = true,
-        IgnoreCertificateChainErrors = true,
-        IgnoreCertificateRevocationErrors = true,
-        AllowUntrustedCertificates = true
-    }
-};
+// Use secure TCP connection.
+var options = new MqttClientOptionsBuilder()
+    .WithTcpServer("broker.hivemq.com")
+    .WithTls()
+    .Build();
 ```
 
 # Dealing with special certificates
@@ -99,19 +88,27 @@ MqttTcpChannel.CustomIgnorableServerCertificateErrorsResolver = o =>
 ```
 
 # WebSocket connection
-In order to use a WebSocket communication channel the following code is required:
+In order to use a WebSocket communication channel the following code is required.
 ```csharp
-var wsOptions = new MqttClientWebSocketOptions
-{
-    Uri = "broker.hivemq.com:8000/mqtt",
-    ClientId = "TestClient"
-};
+// Use WebSocket connection.
+var options = new MqttClientOptionsBuilder()
+    .WithWebSocketServer("broker.hivemq.com:8000/mqtt")
+    .Build();
+```
 
-await mqttClient.ConnectAsync(wsOptions);
+# Connecting
+After setting up the MQTT client options a connection can be established. The following code shows how to connect with a server.
+```csharp
+// Use WebSocket connection.
+var options = new MqttClientOptionsBuilder()
+    .WithWebSocketServer("broker.hivemq.com:8000/mqtt")
+    .Build();
+
+await client.ConnectAsync(options);
 ```
 
 # Reconnecting
-If the connection to the server is lost the _Disconnected_ event is fired. It can be used to reconnect (after a short delay). If the reconnect fails the _Disconnected_ event is fired again. The following code shows how to setup this behavior:
+If the connection to the server is lost the _Disconnected_ event is fired. The event is also fired if a call to _ConnectAsync_ has failed because the server is not reachable etc. This allows calling the _ConnectAsync_ method only one time and dealing with retries etc. via consuming the _Disconnected_ event. If the reconnect fails the _Disconnected_ event is fired again. The following code shows how to setup this behavior including a short delay.
 ```csharp
 mqttClient.Disconnected += async (s, e) =>
 {
