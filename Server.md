@@ -32,6 +32,7 @@ It is also possible to use the service collection of the DI directly. The follow
 ```csharp
 //setup
 var services = new ServiceCollection()
+    .AddLogging()
     .AddMqttServer(options => 
     {
        // modify options here
