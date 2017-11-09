@@ -13,6 +13,7 @@ It is also possible to use the service provider from the DI library directly and
 // Create a client from the service provider manually.
 var serviceProvider = new ServiceCollection()
     .AddMqttClient()
+    .AddLogging()
     .BuildServiceProvider();
 
 var mqttClient = serviceProvider.GetRequiredService<IMqttClient>();
