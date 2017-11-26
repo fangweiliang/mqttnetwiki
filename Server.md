@@ -25,28 +25,25 @@ await mqttServer.StartAsync(optionsBuilder.Build());
 The following code shows how to validate an incoming MQTT client connection request:
 ```csharp
 // Setup client validator.
-var mqttServer = new MqttFactory().CreateMqttServer(options =>
+options.ConnectionValidator = c =>
 {
-    options.ConnectionValidator = c =>
+    if (c.ClientId.Length < 10)
     {
-        if (c.ClientId.Length < 10)
-        {
-            return MqttConnectReturnCode.ConnectionRefusedIdentifierRejected;
-        }
+        return MqttConnectReturnCode.ConnectionRefusedIdentifierRejected;
+    }
 
-        if (c.Username != "mySecretUser")
-        {
-            return MqttConnectReturnCode.ConnectionRefusedBadUsernameOrPassword;
-        }
+    if (c.Username != "mySecretUser")
+    {
+        return MqttConnectReturnCode.ConnectionRefusedBadUsernameOrPassword;
+    }
 
-        if (c.Password != "mySecretPassword")
-        {
-            return MqttConnectReturnCode.ConnectionRefusedBadUsernameOrPassword;
-        }
+    if (c.Password != "mySecretPassword")
+    {
+        return MqttConnectReturnCode.ConnectionRefusedBadUsernameOrPassword;
+    }
 
-        return MqttConnectReturnCode.ConnectionAccepted;
-    };
-});
+    return MqttConnectReturnCode.ConnectionAccepted;
+};
 ```
 
 # Using a certificate
