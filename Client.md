@@ -1,33 +1,9 @@
 # Preparation
-This library uses the library _Microsoft.Extensions.DependencyInjection_ for DI which allows creating a MQTT client in several ways
-
 The following code shows how to create a new MQTT client in the most simple way using the _MqttFactory_.
 ```csharp
 // Create a new MQTT client.
 var factory = new MqttFactory();
 var mqttClient = factory.CreateMqttClient();
-```
-
-It is also possible to use the service provider from the DI library directly and get an instance of the MQTT client. The following code shows how to use the service provider approach.
-```csharp
-// Create a client from the service provider manually.
-var serviceProvider = new ServiceCollection()
-    .AddMqttClient()
-    .AddLogging()
-    .BuildServiceProvider();
-
-var mqttClient = serviceProvider.GetRequiredService<IMqttClient>();
-```
-
-At least it is possible to let the DI inject the MQTT client in other services. In order to use this the _IMqttClient_ interface must be used as a parameter for the constructor. The following code shows how to declare the MQTT client for DI.
-```csharp
-public class ServiceClass
-{
-    ServiceClass(IMqttClient mqttclient) 
-    {
-    }
-}
-
 ```
 
 # Client options
