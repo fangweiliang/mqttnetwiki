@@ -73,6 +73,8 @@ var options = new MqttClientOptionsBuilder()
     .Build();
 ```
 
+Also secure connections using a web socket can be use with the _UseTls()_ method.
+
 # Connecting
 After setting up the MQTT client options a connection can be established. The following code shows how to connect with a server.
 ```csharp
