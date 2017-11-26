@@ -3,48 +3,22 @@ Creating a MQTT server is similar to creating a MQTT client. The following code 
 ```csharp
 // Start a MQTT server.
 var mqttServer = new MqttFactory().CreateMqttServer();
-await mqttServer.StartAsync();
+await mqttServer.StartAsync(new MqttServerOptions());
 Console.WriteLine("Press any key to exit.");
 Console.ReadLine();
 await mqttServer.StopAsync();
 ```
 
-Setting several options for the MQTT server is possible by providing a configuration callback. This callback exposes all available options which can be set within the callback. The following code shows how to setup a MQTT server.
+Setting several options for the MQTT server is possible by setting the property values of the _MqttServerOptions_ directly or via using the _MqttServerOptionsBuilder_ (which is recommended). The following code shows how to use the _MqttServerOptionsBuilder_.
 ```csharp
 // Configure MQTT server.
-var mqttServer = new MqttFactory().CreateMqttServer(options =>
-{
-    options.ConnectionBacklog = 100;
-    options.DefaultEndpointOptions.Port = 1884;
-    options.ConnectionValidator = packet =>
-    {
-        if (packet.ClientId != "Highlander")
-        {
-            return MqttConnectReturnCode.ConnectionRefusedIdentifierRejected;
-        }
+// Configure MQTT server.
+var optionsBuilder = new MqttServerOptionsBuilder()
+    .WithConnectionBacklog(100)
+    .WithDefaultEndpointPort(1884);
 
-        return MqttConnectReturnCode.ConnectionAccepted;
-    };
-});
-```
-
-It is also possible to use the service collection of the DI directly. The following code shows how to use the DI components directly.
-```csharp
-//setup
-var services = new ServiceCollection()
-    .AddLogging()
-    .AddMqttServer(options => 
-    {
-       // modify options here
-    })
-    .BuildServiceProvider();
-
-//use 
-var mqttServer = services.GetRequiredService<IMqttServer>();
-await mqttServer.StartAsync();
-Console.WriteLine("Press any key to exit.");
-Console.ReadLine();
-await mqttServer.StopAsync();
+var mqttServer = new MqttFactory().CreateMqttServer();
+await mqttServer.StartAsync(optionsBuilder.Build());
 ```
 
 # Validating MQTT clients
