@@ -73,7 +73,7 @@ var options = new MqttClientOptionsBuilder()
     .Build();
 ```
 
-Also secure connections using a web socket can be use with the _UseTls()_ method.
+Also secure web socket connections can be used via calling the _UseTls()_ method which will switch the protocol from _ws://_ to _wss://_. Usually the sub protocol is required which can be added to the URI directly or to a dedicated property.
 
 # Connecting
 After setting up the MQTT client options a connection can be established. The following code shows how to connect with a server.
