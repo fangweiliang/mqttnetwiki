@@ -145,7 +145,8 @@ This library also has support for a WebSocket based server which is integrated i
 // In class _Startup_ of the ASP.NET Core 2.0 project.
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddHostedMqttServer();
+     var mqttServerOptions = new MqttServerOptionsBuilder().Build();
+     services.AddHostedMqttServer(mqttServerOptions);
 }
 
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
