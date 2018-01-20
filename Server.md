@@ -125,6 +125,8 @@ options.ApplicationMessageInterceptor = context =>
 };
 ```
 
+If you want to stop processing an application message completely (like a delete) then the property _context.ApplicationMessage.Payload_ must be set to _null_.
+
 # Intercepting subscriptions
 A custom interceptor can be set to control which topics can be subscribed by a MQTT client. This allows moving private API-Topics to a protected are which is only available for certain clients. The following code shows how to use the subscription interceptor.
 ```csharp
