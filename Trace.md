@@ -3,7 +3,7 @@ Debug messages for the _MqttClient_ and _MqttServer_ can be consumed using a sta
 
 ```csharp
 // Write all trace messages to the console window.
-MqttNetGlobalLog.LogMessagePublished += (s, e) =>
+MqttNetGlobalLogger.LogMessagePublished += (s, e) =>
 {
     var trace = $">> [{e.TraceMessage.Timestamp:O}] [{e.TraceMessage.ThreadId}] [{e.TraceMessage.Source}] [{e.TraceMessage.Level}]: {e.TraceMessage.Message}";
     if (e.TraceMessage.Exception != null)
