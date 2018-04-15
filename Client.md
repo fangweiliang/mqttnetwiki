@@ -150,3 +150,49 @@ var message = new MqttApplicationMessageBuilder()
     .WithTopic("/MQTTnet/is/awesome")
     .Build();
 ```
+
+# RPC calls
+The extension _MQTTnet.Extensions.Rpc_ (available as nuget) allows sending a request and waiting for the matching reply. This is done via defining a pattern which uses the topic to correlate the request and the response. From client usage it is possible to define a timeout. The following code shows how to send a RPC call.
+
+```csharp
+var rpcClient = new MqttRpcClient(_mqttClient);
+
+var timeout = TimeSpan.FromSeconds(5);
+var qos = MqttQualityOfServiceLevel.AtMostOnce;
+
+var response = await rpcClient.ExecuteAsync(timeout, "myMethod", payload, qos);
+```
+
+The device (Arduino, ESP8266 etc.) which responds to the request needs to parse the topic and reply to it. The following code shows how to implement the handler in C.
+
+```C
+// If using the MQTT client PubSubClient it must be ensured  that the request topic for each method is subscribed like the following.
+_mqttClient.subscribe("MQTTnet.RPC/+/ping");
+_mqttClient.subscribe("MQTTnet.RPC/+/do_something");
+
+// It is not allowed to change the structure of the topic. Otherwise RPC will not work. So method names can be separated using
+// an _ or . but no +, # or . If it is required to distinguish between devices own rules can be defined like the following.
+_mqttClient.subscribe("MQTTnet.RPC/+/deviceA.ping");
+_mqttClient.subscribe("MQTTnet.RPC/+/deviceB.ping");
+_mqttClient.subscribe("MQTTnet.RPC/+/deviceC.getTemperature");
+
+// Within the callback of the MQTT client the topic must be checked if it belongs to MQTTnet RPC. The following code shows one
+// possible way of doing this.
+void mqtt_Callback(char *topic, byte *payload, unsigned int payloadLength)
+{
+	String topicString = String(topic);
+
+	if (topicString.startsWith("MQTTnet.RPC/")) {
+		String responseTopic = topicString + String("/response");
+
+		if (topicString.endsWith("/deviceA.ping")) {
+			mqtt_publish(responseTopic, "pong", false);
+			return;
+		}
+	}
+}
+
+// Important notes:
+// ! Do not send response message with the _retain_ flag set to true.
+// ! All required data for a RPC call and the result must be placed into the payload.
+```
