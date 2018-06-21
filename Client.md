@@ -171,9 +171,11 @@ The device (Arduino, ESP8266 etc.) which responds to the request needs to parse 
 _mqttClient.subscribe("MQTTnet.RPC/+/ping");
 _mqttClient.subscribe("MQTTnet.RPC/+/do_something");
 
-// It is not allowed to change the structure of the topic. Otherwise RPC will not work.
+// It is not allowed to change the structure of the topic.
+// Otherwise RPC will not work.
 // So method names can be separated using an _ or . but no +, # or .
-// If it is required to distinguish between devices own rules can be defined like the following.
+// If it is required to distinguish between devices
+// own rules can be defined like the following:
 _mqttClient.subscribe("MQTTnet.RPC/+/deviceA.ping");
 _mqttClient.subscribe("MQTTnet.RPC/+/deviceB.ping");
 _mqttClient.subscribe("MQTTnet.RPC/+/deviceC.getTemperature");
