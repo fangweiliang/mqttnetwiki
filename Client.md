@@ -163,7 +163,7 @@ var qos = MqttQualityOfServiceLevel.AtMostOnce;
 var response = await rpcClient.ExecuteAsync(timeout, "myMethod", payload, qos);
 ```
 
-The device (Arduino, ESP8266 etc.) which responds to the request needs to parse the topic and reply to it. The following code shows how to implement the handler in C.
+The device (Arduino, ESP8266 etc.) which responds to the request needs to parse the topic and reply to it. The following code shows how to implement the handler.
 
 ```C
 // If using the MQTT client PubSubClient it must be ensured 
