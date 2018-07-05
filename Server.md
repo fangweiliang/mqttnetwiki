@@ -193,6 +193,9 @@ public void ConfigureServices(IServiceCollection services)
 
      //this adds tcp server support based on Microsoft.AspNetCore.Connections.Abstractions
      services.AddMqttConnectionHandler();
+
+     //this adds websocket support
+     services.AddMqttWebSocketServerAdapter();
 }
 ```
 
