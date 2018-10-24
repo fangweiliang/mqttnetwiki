@@ -22,7 +22,8 @@ var mqttClient = new MqttFactory().CreateManagedMqttClient();
 await mqttClient.SubscribeAsync(new TopicFilterBuilder().WithTopic("my/topic").Build());
 await mqttClient.StartAsync(options);
 
-// StartAsync returns immediately, as it starts a new thread using Task.Run, and so the calling thread needs to wait.
+// StartAsync returns immediately, as it starts a new thread using Task.Run, 
+// and so the calling thread needs to wait.
 Console.ReadLine();
 ```
 
