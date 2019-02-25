@@ -54,14 +54,19 @@ options.ConnectionValidator = c =>
 # Using a certificate
 In order to use an encrypted connection a certificate __including__ the private key is required. The following code shows how to start a server using a certificate for encryption:
 ```csharp
-var certificate = new X509Certificate(@"C:\certs\test\test.cer", "");
-options.TlsEndpointOptions.Certificate = certificate.Export(X509ContentType.Cert);
+using System.Security.Cryptography.X509Certificates
+...
+var certificate = new X509Certificate2(@"C:\certs\test\test.cer", password, X509KeyStorageFlags.Exportable);
+options.TlsEndpointOptions.Certificate = certificate.Export(X509ContentType.Pfx);
+options.TlsEndpointOptions.IsEnabled = true;
 ```
 But also other overloads getting a valid certificate blob (byte array) can be used.
 
-For creating a self signed certificate for testing the following command can be used (Windows SDK must be installed):
+For creating a self-signed certificate for testing the following command can be used (Windows SDK must be installed):
 
 `makecert.exe -sky exchange -r -n "CN=selfsigned.crt" -pe -a sha1 -len 2048 -ss My "test.cer"`
+
+OpenSSL can can also be used to create a self-signed PFX certificate [as described here](https://github.com/Azure/azure-xplat-cli/wiki/Getting-Self-Signed-SSL-Certificates-(.pem-and-.pfx)). 
 
 # Publishing messages
 The server is also able to publish MQTT application messages. The object is the same as for the client implementation. Due to the fact that the server is able to publish its own messages it is not required having a loopback connection in the same process. 
