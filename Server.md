@@ -66,7 +66,7 @@ For creating a self-signed certificate for testing the following command can be 
 
 `makecert.exe -sky exchange -r -n "CN=selfsigned.crt" -pe -a sha1 -len 2048 -ss My "test.cer"`
 
-OpenSSL can can also be used to create a self-signed PFX certificate [as described here](https://github.com/Azure/azure-xplat-cli/wiki/Getting-Self-Signed-SSL-Certificates-(.pem-and-.pfx)). 
+OpenSSL can also be used to create a self-signed PFX certificate [as described here](https://github.com/Azure/azure-xplat-cli/wiki/Getting-Self-Signed-SSL-Certificates-(.pem-and-.pfx)). 
 
 # Publishing messages
 The server is also able to publish MQTT application messages. The object is the same as for the client implementation. Due to the fact that the server is able to publish its own messages it is not required having a loopback connection in the same process. 
