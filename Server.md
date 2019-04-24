@@ -12,7 +12,6 @@ await mqttServer.StopAsync();
 Setting several options for the MQTT server is possible by setting the property values of the _MqttServerOptions_ directly or via using the _MqttServerOptionsBuilder_ (which is recommended). The following code shows how to use the _MqttServerOptionsBuilder_.
 ```csharp
 // Configure MQTT server.
-// Configure MQTT server.
 var optionsBuilder = new MqttServerOptionsBuilder()
     .WithConnectionBacklog(100)
     .WithDefaultEndpointPort(1884);
