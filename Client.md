@@ -20,7 +20,7 @@ var options = new MqttClientOptionsBuilder()
 ```
 
 ## Securing passwords
-The default implementation uses a `string` to hold the client password. However this is a security vulnerability because the password is stored in the heap as clear text. It is recommended to use a `SecureString` for this purpose. But this class is not available for all supported platforms (UWP, netstandard 1.3). This library does not implement it because for other plattforms custom implementations like async encryption are required. It is recommended to implement an own _IMqttClientCredentials_ class which returns the decrypted password but does not store it unencrypted.
+The default implementation uses a `string` to hold the client password. However this is a security vulnerability because the password is stored in the heap as clear text. It is recommended to use a `SecureString` for this purpose. But this class is not available for all supported platforms (UWP, netstandard 1.3). This library does not implement it because for other platforms custom implementations like async encryption are required. It is recommended to implement an own _IMqttClientCredentials_ class which returns the decrypted password but does not store it not encrypted.
 
 # TCP connection
 The following code shows how to set the options of the MQTT client to make use of a TCP based connection.
@@ -44,16 +44,17 @@ var options = new MqttClientOptionsBuilder()
 # Dealing with special certificates
 In order to deal with special certificate errors a special validation callback is available (.NET Framework & netstandard). For UWP apps a property is available.
 ```csharp
-// For .NET Framwork & netstandard apps:
-MqttTcpChannel.CustomCertificateValidationCallback = (x509Certificate, x509Chain, sslPolicyErrors, mqttClientTcpOptions) =>
-{
-    if (mqttClientTcpOptions.Server == "server_with_revoked_cert")
+// For .NET Framework & netstandard apps:
+var options = new MqttClientOptionsBuilder()
+    .WithTls(new MqttClientOptionsBuilderTlsParameters
     {
-        return true;
-    }
-
-    return false;
-};
+        CertificateValidationCallback = (X509Certificate x, X509Chain y, SslPolicyErrors z, IMqttClientOptions o) =>
+            {
+                // TODO: Check conditions of certificate by using above parameters.
+                return true;
+            }
+    })
+    .Build();
 
 // For UWP apps:
 MqttTcpChannel.CustomIgnorableServerCertificateErrorsResolver = o =>
@@ -92,25 +93,25 @@ await client.ConnectAsync(options);
 # Reconnecting
 If the connection to the server is lost the _Disconnected_ event is fired. The event is also fired if a call to _ConnectAsync_ has failed because the server is not reachable etc. This allows calling the _ConnectAsync_ method only one time and dealing with retries etc. via consuming the _Disconnected_ event. If the reconnect fails the _Disconnected_ event is fired again. The following code shows how to setup this behavior including a short delay.
 ```csharp
-mqttClient.Disconnected += async (s, e) =>
+client.UseDisconnectedHandler(async e =>
 {
     Console.WriteLine("### DISCONNECTED FROM SERVER ###");
     await Task.Delay(TimeSpan.FromSeconds(5));
 
     try
     {
-        await mqttClient.ConnectAsync(options);
+        await client.ConnectAsync(options);
     }
     catch
     {
         Console.WriteLine("### RECONNECTING FAILED ###");
     }
-};
+});
 ```
 # Consuming messages
 The following code shows how to handle incoming messages:
 ```csharp
-mqttClient.ApplicationMessageReceived += (s, e) =>
+client.UseApplicationMessageReceivedHandler(e =>
 {
     Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
     Console.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");
@@ -118,21 +119,22 @@ mqttClient.ApplicationMessageReceived += (s, e) =>
     Console.WriteLine($"+ QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
     Console.WriteLine($"+ Retain = {e.ApplicationMessage.Retain}");
     Console.WriteLine();
-};
+});
 ```
+It is also supported to use an async method instead of a synchronized one like in the above example.
 
 # Subscribing to a topic
 Once a connection with the server is established subscribing to a topic is possible. The following code shows how to subscribe to a topic after the MQTT client has connected.
 ~~~csharp
-client.Connected += async (s, e) =>
+client.UseConnectedHandler(async e =>
 {
     Console.WriteLine("### CONNECTED WITH SERVER ###");
 
     // Subscribe to a topic
-    await mqttClient.SubscribeAsync(new TopicFilterBuilder().WithTopic("my/topic").Build());
+    await client.SubscribeAsync(new TopicFilterBuilder().WithTopic("my/topic").Build());
 
     Console.WriteLine("### SUBSCRIBED ###");
-};
+});
 ~~~
 
 # Publishing messages
