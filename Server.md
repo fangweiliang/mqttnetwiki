@@ -26,7 +26,7 @@ The following code shows how to validate an incoming MQTT client connection requ
 // Setup client validator.
 var options = new MqttServerOptions();
 
-options.ConnectionValidator = c =>
+options.ConnectionValidator = new MqttServerConnectionValidatorDelegate(c =>
 {
     if (c.ClientId.Length < 10)
     {
@@ -47,7 +47,7 @@ options.ConnectionValidator = c =>
     }
 
     c.ReturnCode = MqttConnectReturnCode.ConnectionAccepted;
-};
+});
 ```
 
 # Using a certificate
@@ -135,20 +135,24 @@ If you want to stop processing an application message completely (like a delete)
 A custom interceptor can be set to control which topics can be subscribed by a MQTT client. This allows moving private API-Topics to a protected area which is only available for certain clients. The following code shows how to use the subscription interceptor.
 ```csharp
 // Protect several topics from being subscribed from every client.
-options.SubscriptionInterceptor = context =>
-{
-    if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
+var options = new MqttServerOptionsBuilder()
+    .WithSubscriptionInterceptor(context =>
     {
-        context.AcceptSubscription = false;
-    }
+        if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
+        {
+            context.AcceptSubscription = false;
+        }
 
-    if (context.TopicFilter.Topic.StartsWith("the/secret/stuff") && context.ClientId != "Imperator")
-    {
-        context.AcceptSubscription = false;
-        context.CloseConnection = true;
-    }
-};
+        if (context.TopicFilter.Topic.StartsWith("the/secret/stuff") && context.ClientId != "Imperator")
+        {
+            context.AcceptSubscription = false;
+            context.CloseConnection = true;
+        }
+    })
+    .Build();
 ```
+
+It is also supported to use an async method instead of a synchronized one like in the above example.
 
 # ASP.NET Core Integration
 This library also has support for a WebSocket based server which is integrated into ASP.NET Core 2.0. This functionality requires an additional library called _MQTTnet.AspNetCore_. After adding this library a MQTT server can be added to a Kestrel HTTP server. 
