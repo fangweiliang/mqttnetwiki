@@ -118,15 +118,21 @@ public class RetainedMessageHandler : IMqttServerStorage
 A custom interceptor can be set at the server options. This interceptor is called for __every__ application message which is received by the server. This allows extending application messages __before__ they are persisted (in case of a retained message) __and before__ being dispatched to subscribers. This allows use cases like adding a time stamp to every application message if the hardware device does not know the time or time zone etc. The following code shows how to use the interceptor:
 ```csharp
 // Extend the timestamp for all messages from clients.
-options.ApplicationMessageInterceptor = context =>
-{
-    if (MqttTopicFilterComparer.IsMatch(context.ApplicationMessage.Topic, "/myTopic/WithTimestamp/#"))
+var options = new MqttServerOptionsBuilder()
+    .WithSubscriptionInterceptor(context =>
     {
-        // Replace the payload with the timestamp. But also extending a JSON 
-        // based payload with the timestamp is a suitable use case.
-        context.ApplicationMessage.Payload = Encoding.UTF8.GetBytes(DateTime.Now.ToString("O"));
-    }
-};
+        if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
+        {
+            context.AcceptSubscription = false;
+        }
+
+        if (context.TopicFilter.Topic.StartsWith("the/secret/stuff") && context.ClientId != "Imperator")
+        {
+            context.AcceptSubscription = false;
+            context.CloseConnection = true;
+        }
+    })
+    .Build();
 ```
 
 If you want to stop processing an application message completely (like a delete) then the property _context.ApplicationMessage.Payload_ must be set to _null_.
