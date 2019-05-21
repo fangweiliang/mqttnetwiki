@@ -117,20 +117,16 @@ public class RetainedMessageHandler : IMqttServerStorage
 # Intercepting application messages
 A custom interceptor can be set at the server options. This interceptor is called for __every__ application message which is received by the server. This allows extending application messages __before__ they are persisted (in case of a retained message) __and before__ being dispatched to subscribers. This allows use cases like adding a time stamp to every application message if the hardware device does not know the time or time zone etc. The following code shows how to use the interceptor:
 ```csharp
-// Extend the timestamp for all messages from clients.
 var options = new MqttServerOptionsBuilder()
-    .WithSubscriptionInterceptor(context =>
+    .WithApplicationMessageInterceptor(context =>
     {
-        if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
+        if (context.ApplicationMessage.Topic == "my/custom/topic")
         {
-            context.AcceptSubscription = false;
+            context.ApplicationMessage.Payload = Encoding.UTF8.GetBytes("The server injected payload.");
         }
 
-        if (context.TopicFilter.Topic.StartsWith("the/secret/stuff") && context.ClientId != "Imperator")
-        {
-            context.AcceptSubscription = false;
-            context.CloseConnection = true;
-        }
+        // It is also possible to read the payload and extend it. For example by adding a timestamp in a JSON document.
+        // This is useful when the IoT device has no own clock and the creation time of the message might be important.
     })
     .Build();
 ```
