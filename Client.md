@@ -206,3 +206,10 @@ void mqtt_Callback(char *topic, byte *payload, unsigned int payloadLength)
 // ! Do not send response message with the _retain_ flag set to true.
 // ! All required data for a RPC call and the result must be placed into the payload.
 ```
+
+# Connecting with Amazon AWS
+Due to a known issue with WebSocket implementation for .NET it is not possible to connect with Amazon AWS with MQTTnet because it relies on the .NET implementation of WebSockets.
+
+But there is a sample available which shows how to use a different transport layer implementation.
+
+https://github.com/aws-samples/aws-iot-core-dotnet-app-mqtt-over-websockets-sigv4
