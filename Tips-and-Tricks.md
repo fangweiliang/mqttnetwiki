@@ -7,3 +7,6 @@ MQTTnet comes with some builders like the _MqttClientOptionsBuilder_ or _MqttApp
 # MQTT best practices
 This project only covers the implementation of a basic MQTT library. For best practices, general recommendation ans specifications please visit https://www.hivemq.com/mqtt/.
 
+# Prevent processing event published by publisher
+
+The broker does not distinguish. Every message is treated the same. But you can skip events the publisher *also* publishes to itself by checking the `ClientId`. If this is set to `null` the message was sent by the server directly.
