@@ -8,4 +8,4 @@ MQTTnet comes with some builders like the _MqttClientOptionsBuilder_ or _MqttApp
 This project only covers the implementation of a basic MQTT library. For best practices, general recommendation ans specifications please visit https://www.hivemq.com/mqtt/.
 
 # Prevent processing event published by server
-The server (broker) does not distinguish between clients and itself. Every message is treated the same way. But it is supported to skip events from the server itself by checking the `ClientId`. If this is set to `null` the message was sent by the server directly and processing can be skipped.
+The server (broker) does not distinguish between clients and itself. Every message is treated the same way. But it is supported to skip events from the server itself by checking the `ClientId` property. If this is set to `null` the message was sent by the server directly and processing can be skipped.
