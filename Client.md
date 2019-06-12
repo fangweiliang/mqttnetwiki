@@ -119,6 +119,8 @@ client.UseApplicationMessageReceivedHandler(e =>
     Console.WriteLine($"+ QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
     Console.WriteLine($"+ Retain = {e.ApplicationMessage.Retain}");
     Console.WriteLine();
+
+    Task.Run(() => client.PublishAsync("hello/world"));
 });
 ```
 It is also supported to use an async method instead of a synchronized one like in the above example.
