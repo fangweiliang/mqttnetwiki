@@ -123,6 +123,8 @@ client.UseApplicationMessageReceivedHandler(e =>
 ```
 It is also supported to use an async method instead of a synchronized one like in the above example.
 
+⚠️ **Publishing messages inside that received messages handler requires to use _Task.Run_ when using a QoS > 0. The reason is that the message handler has to finish first before the next message is received. The reason is to preserve ordering of the application messages.** 
+
 # Subscribing to a topic
 Once a connection with the server is established subscribing to a topic is possible. The following code shows how to subscribe to a topic after the MQTT client has connected.
 ~~~csharp
