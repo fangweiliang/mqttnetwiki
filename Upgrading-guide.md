@@ -32,7 +32,6 @@ private async void OnConnectingFailed(ManagedProcessFailedEventArgs e)
 {
 }
 ```
-* Creation of the managed client changed from `var client = new MqttFactory().CreateManagedMqttClient();` to `?` --> Wait for answer in https://github.com/chkr1011/MQTTnet/issues/614.
 
 ## Client:
 * Updated async handlers:
