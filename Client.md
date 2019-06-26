@@ -20,7 +20,7 @@ var options = new MqttClientOptionsBuilder()
 ```
 
 ## Securing passwords
-The default implementation uses a `string` to hold the client password. However this is a security vulnerability because the password is stored in the heap as clear text. It is recommended to use a `SecureString` for this purpose. But this class is not available for all supported platforms (UWP, netstandard 1.3). This library does not implement it because for other platforms custom implementations like async encryption are required. It is recommended to implement an own _IMqttClientCredentials_ class which returns the decrypted password but does not store it not encrypted.
+The default implementation uses a `string` to hold the client password. However this is a security vulnerability because the password is stored in the heap as clear text. It is recommended to use a `SecureString` for this purpose. But this class is not available for all supported platforms (UWP, netstandard 1.3). This library does not implement it because for other platforms custom implementations like async encryption are required. It is recommended to implement an own _IMqttClientCredentials_ class which returns the decrypted password but does not store it unencrypted.
 
 # TCP connection
 The following code shows how to set the options of the MQTT client to make use of a TCP based connection.
