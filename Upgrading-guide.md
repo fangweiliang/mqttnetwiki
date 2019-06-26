@@ -3,7 +3,7 @@
 ## General:
 * `MqttProtocolVersion` is now in the `MQTTnet.Formatter` namespace.
 * `MqttFixedHeader`, `MqttPacketBodyReader`, `MqttPacketReader`, `MqttPacketWriter` and `MqttProtocolVersion` are now in the `MQTTnet.Formatter` namespace.
-* `IMqttPacketSerializer` and `MqttPacketSerializer` do not exist anymore. --> Wait for answer in https://github.com/chkr1011/MQTTnet/issues/614.
+* `IMqttPacketSerializer` and `MqttPacketSerializer` do not exist anymore.
 
 ## ManagedClient:
 * Updated async handlers:
