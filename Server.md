@@ -53,11 +53,19 @@ options.ConnectionValidator = new MqttServerConnectionValidatorDelegate(c =>
 # Using a certificate
 In order to use an encrypted connection a certificate __including__ the private key is required. The following code shows how to start a server using a certificate for encryption:
 ```csharp
-using System.Security.Cryptography.X509Certificates
+using System.Reflection;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 ...
-var certificate = new X509Certificate2(@"C:\certs\test\test.cer", password, X509KeyStorageFlags.Exportable);
-options.TlsEndpointOptions.Certificate = certificate.Export(X509ContentType.Pfx);
-options.TlsEndpointOptions.IsEnabled = true;
+
+var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+var certificate = new X509Certificate2(Path.Combine(currentPath, "certificate.pfx"),"yourPassword", X509KeyStorageFlags.Exportable);
+
+var optionsBuilder = new MqttServerOptionsBuilder()
+    .WithEncryptedEndpoint()
+    .WithEncryptedEndpointPort(config.Port)
+    .WithEncryptionCertificate(certificate.Export(X509ContentType.Pfx))
+    .WithEncryptionSslProtocol(SslProtocols.Tls12)
 ```
 But also other overloads getting a valid certificate blob (byte array) can be used.
 
@@ -65,7 +73,13 @@ For creating a self-signed certificate for testing the following command can be 
 
 `makecert.exe -sky exchange -r -n "CN=selfsigned.crt" -pe -a sha1 -len 2048 -ss My "test.cer"`
 
-OpenSSL can also be used to create a self-signed PFX certificate [as described here](https://github.com/Azure/azure-xplat-cli/wiki/Getting-Self-Signed-SSL-Certificates-(.pem-and-.pfx)). 
+OpenSSL can also be used to create a self-signed PFX certificate [as described here](https://github.com/Azure/azure-xplat-cli/wiki/Getting-Self-Signed-SSL-Certificates-(.pem-and-.pfx)).
+
+## Example:
+```
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+openssl pkcs12 -export -out certificate.pfx -inkey key.pem -in cert.pem
+```
 
 # Publishing messages
 The server is also able to publish MQTT application messages. The object is the same as for the client implementation. Due to the fact that the server is able to publish its own messages it is not required having a loopback connection in the same process. 
@@ -125,6 +139,12 @@ var options = new MqttServerOptionsBuilder()
             context.ApplicationMessage.Payload = Encoding.UTF8.GetBytes("The server injected payload.");
         }
 
+        // It is possible to disallow the sending of applications for a certain client id like this:
+        if (context.ClientId != "Someone")
+        {
+            c.AcceptPublish = false;
+            return;
+        }
         // It is also possible to read the payload and extend it. For example by adding a timestamp in a JSON document.
         // This is useful when the IoT device has no own clock and the creation time of the message might be important.
     })
