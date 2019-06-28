@@ -195,7 +195,7 @@ private static IWebHost BuildWebHost(string[] args) =>
     .UseStartup<Startup>()
     .Build();
 
-// In class _Startup_ of the ASP.NET Core 2.1 project.
+// In class _Startup_ of the ASP.NET Core 2.1 or 2.2 project.
 public void ConfigureServices(IServiceCollection services)
 {
      //this adds a hosted mqtt server to the services
@@ -208,5 +208,3 @@ public void ConfigureServices(IServiceCollection services)
      services.AddMqttWebSocketServerAdapter();
 }
 ```
-
-
