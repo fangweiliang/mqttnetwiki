@@ -10,5 +10,5 @@ This project only covers the implementation of a basic MQTT library. For best pr
 # Prevent processing event published by server
 The server (broker) does not distinguish between clients and itself. Every message is treated the same way. But it is supported to skip events from the server itself by checking the `ClientId` property. If this is set to `null` the message was sent by the server directly and processing can be skipped.
 
-# UWP and localhost loopback addresses
+# Windows IoT Core and UWP localhost loopback addresses
 In Windows IoT Core as well as in UWP, loopback connections (127.0.0.1) are not allowed. If you try to connect to a locally running server (broker), this will fail.
