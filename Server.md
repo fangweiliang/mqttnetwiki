@@ -231,3 +231,6 @@ public void ConfigureServices(IServiceCollection services)
      services.AddMqttWebSocketServerAdapter();
 }
 ```
+
+# Windows IoT Core and UWP localhost loopback addresses
+In Windows IoT Core as well as in UWP, loopback connections (127.0.0.1) are not allowed. If you try to connect to a locally running server (broker), this will fail.
