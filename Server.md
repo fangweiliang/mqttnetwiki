@@ -139,7 +139,7 @@ var options = new MqttServerOptionsBuilder()
             context.ApplicationMessage.Payload = Encoding.UTF8.GetBytes("The server injected payload.");
         }
 
-        // It is possible to disallow the sending of applications for a certain client id like this:
+        // It is possible to disallow the sending of messages for a certain client id like this:
         if (context.ClientId != "Someone")
         {
             c.AcceptPublish = false;
