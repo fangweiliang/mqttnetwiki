@@ -177,6 +177,9 @@ var options = new MqttServerOptionsBuilder()
 It is also supported to use an async method instead of a synchronized one like in the above example.
 
 # ASP.NET Core Integration
+
+## ASP.NET Core 2.0
+
 This library also has support for a WebSocket based server which is integrated into ASP.NET Core 2.0. This functionality requires an additional library called _MQTTnet.AspNetCore_. After adding this library a MQTT server can be added to a Kestrel HTTP server. 
 
 ```csharp
@@ -200,12 +203,12 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     // other stuff
 }
 ```
-## ASP.NET Core 2.1
+## ASP.NET Core 2.1+
 
-_MQTTnet.AspNetCore_ is compatible with the abstractions present in ASP.NET Core 2.0 but it also offers a new tcp transport based on  ASP.NET Core 2.1 Microsoft.AspNetCore.Connections.Abstractions. This transport is mutual exclusive with the old tcp transport so you may only add and use one of them. Our benchmark indicates that the new transport is up to 30 times faster. 
+_MQTTnet.AspNetCore_ is compatible with the abstractions present in ASP.NET Core 2.0 but it also offers a new tcp transport based on ASP.NET Core 2.1 Microsoft.AspNetCore.Connections.Abstractions. This transport is mutual exclusive with the old tcp transport so you may only add and use one of them. Our benchmark indicates that the new transport is up to 30 times faster. 
 
 ```csharp
-// In class _Program_ of the ASP.NET Core 2.1 project.
+// In class _Program_ of the ASP.NET Core 2.1 or 2.2 project.
 private static IWebHost BuildWebHost(string[] args) =>
     WebHost.CreateDefaultBuilder(args)
         .UseKestrel(o => {
