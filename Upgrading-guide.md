@@ -1,4 +1,4 @@
-# From 3.0.2 to 3.0.5:
+# From 3.0.3 to 3.0.5:
 
 ## General:
 * `MqttConnectReturnCode` is now deprecated, use `MqttConnectReasonCode` instead.
