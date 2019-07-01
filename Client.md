@@ -217,3 +217,6 @@ Due to a known issue with WebSocket implementation for .NET it is not possible t
 But there is a sample available which shows how to use a different transport layer implementation.
 
 https://github.com/aws-samples/aws-iot-core-dotnet-app-mqtt-over-websockets-sigv4
+
+# Using the client in ASP.NET Core
+When using the client there is no difference between the .Net Framework, .Net Core or ASP.NET Core. The configuration above applies.
