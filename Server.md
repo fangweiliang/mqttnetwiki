@@ -234,6 +234,3 @@ public void ConfigureServices(IServiceCollection services)
 
 # Windows IoT Core and UWP localhost loopback addresses
 In Windows IoT Core as well as in UWP, loopback connections (127.0.0.1) are not allowed. If you try to connect to a locally running server (broker), this will fail.
-
-# MQTT server on a Raspberry Pi
-The following video shows how to setup MQTTnet as a MQTT server running on a Raspberry Pi. https://www.youtube.com/watch?v=PSerr2fvnyc
