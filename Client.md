@@ -1,3 +1,5 @@
+This video tutorial shows how to setup a MQTTnet client for Windows (UWP and IoT Core): https://www.youtube.com/watch?v=PSerr2fvnyc
+
 # Preparation
 The following code shows how to create a new MQTT client in the most simple way using the _MqttFactory_.
 ```csharp
