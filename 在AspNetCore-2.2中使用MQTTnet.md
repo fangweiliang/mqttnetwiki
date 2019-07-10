@@ -340,7 +340,7 @@ public class ApplicationMessageRecorder
 						 dbContext.DeviceRawData.Add(new DeviceRawData
 						{
 							DevId = devId,
-							RawData = message,
+							RawData = data.Data,
 							Sensor  = Sensor
 						});
 						dbContext.SaveChanges();
