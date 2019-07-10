@@ -1,4 +1,3 @@
-# 在AspNetCore 2.2中使用MQTTnet
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MQTTnet可以说是.Net 开发者的福音，在众多MQTT开源项目中，也有.Net的一份子。感谢 [Christian](https://github.com/chkr1011 "Christian")！当发现这个开源项目时，我非常有兴趣。于是我开始了一个实验的项目。我并不是一个软件开发高手，项目代码写得很糟糕。所以并没有开源分享。以下我简单介绍关键代码的实现。同时也提出我遇到的问题，我们来共同学习吧！
 
 创建一个设备信息表：Devices.cs
@@ -342,8 +341,7 @@ public class ApplicationMessageRecorder
 						{
 							DevId = devId,
 							RawData = message,
-							IsSuccess = ser,
-							Sensor  = sen
+							Sensor  = Sensor
 						});
 						dbContext.SaveChanges();
 
