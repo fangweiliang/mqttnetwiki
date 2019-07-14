@@ -130,7 +130,7 @@ public class RetainedMessageHandler : IMqttServerStorage
 # Intercepting application messages
 A custom interceptor can be set at the server options. This interceptor is called for __every__ application message which is received by the server. This allows extending application messages __before__ they are persisted (in case of a retained message) __and before__ being dispatched to subscribers. This allows use cases like adding a time stamp to every application message if the hardware device does not know the time or time zone etc. The following code shows how to use the interceptor:
 ```csharp
-var options = new MqttServerOptionsBuilder()
+var optionsBuilder = new MqttServerOptionsBuilder()
     .WithApplicationMessageInterceptor(context =>
     {
         if (context.ApplicationMessage.Topic == "my/custom/topic")
@@ -156,7 +156,7 @@ If you want to stop processing an application message completely (like a delete)
 A custom interceptor can be set to control which topics can be subscribed by a MQTT client. This allows moving private API-Topics to a protected area which is only available for certain clients. The following code shows how to use the subscription interceptor.
 ```csharp
 // Protect several topics from being subscribed from every client.
-var options = new MqttServerOptionsBuilder()
+var optionsBuilder = new MqttServerOptionsBuilder()
     .WithSubscriptionInterceptor(context =>
     {
         if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
@@ -174,6 +174,16 @@ var options = new MqttServerOptionsBuilder()
 ```
 
 It is also supported to use an async method instead of a synchronized one like in the above example.
+
+# Storing data in the session
+From version 3.0.6 and up, there is a `Dictionary<object, object>` called `SessionItems`. It allows to store custom data in the session and is available in all interceptors:
+
+```csharp
+var optionsBuilder = new MqttServerOptionsBuilder()
+.WithConnectionValidator(c => { c.SessionItems.Add("SomeData", true); }
+.WithSubscriptionInterceptor(c => { c.SessionItems.Add("YourData", new List<string>{"a", "b"}); }
+.WithApplicationMessageInterceptor(c => { c.SessionItems.Add("Test", 123); }
+```
 
 # ASP.NET Core Integration
 
