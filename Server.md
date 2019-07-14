@@ -24,9 +24,8 @@ await mqttServer.StartAsync(optionsBuilder.Build());
 The following code shows how to validate an incoming MQTT client connection request:
 ```csharp
 // Setup client validator.
-var optionsBuilder = new MqttServerOptionsBuilder();
-
-optionsBuilder.WithConnectionValidator(c =>
+var optionsBuilder = new MqttServerOptionsBuilder()
+    .WithConnectionValidator(c =>
 {
     if (c.ClientId.Length < 10)
     {
