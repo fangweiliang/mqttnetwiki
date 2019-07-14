@@ -1,7 +1,7 @@
 # From 3.0.5 to 3.0.6:
 
 ## General:
-* There is a new `Dictionary<object, object>` called `SessionItems`. It allows to store custom data in the session and is available in all interceptors:
+* There is a new `Dictionary<object, object>` called `SessionItems`. It allows to store custom data in the session and is available in all interceptors. For more examples, check https://github.com/chkr1011/MQTTnet/wiki/Server#storing-data-in-the-session.
 
 # From 3.0.3 to 3.0.5:
 
