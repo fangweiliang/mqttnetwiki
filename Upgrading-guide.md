@@ -1,3 +1,8 @@
+# From 3.0.5 to 3.0.6:
+
+## General:
+* There is a new `Dictionary<object, object>` called `SessionItems`. It allows to store custom data in the session and is available in all interceptors:
+
 # From 3.0.3 to 3.0.5:
 
 ## General:
