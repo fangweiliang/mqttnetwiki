@@ -221,4 +221,4 @@ But there is a sample available which shows how to use a different transport lay
 https://github.com/aws-samples/aws-iot-core-dotnet-app-mqtt-over-websockets-sigv4
 
 # Using the client in ASP.NET Core
-When using the client there is no difference between the .Net Framework, .Net Core or ASP.NET Core. The configuration above applies.
+When using the client there is no difference between the .Net Framework, .Net Core or ASP.NET Core. The configuration above applies. The client cannot be made available using dependency injection.
