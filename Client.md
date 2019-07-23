@@ -82,18 +82,18 @@ var options = new MqttClientOptionsBuilder()
 Also secure web socket connections can be used via calling the _UseTls()_ method which will switch the protocol from _ws://_ to _wss://_. Usually the sub protocol is required which can be added to the URI directly or to a dedicated property.
 
 # Connecting
-After setting up the MQTT client options a connection can be established. The following code shows how to connect with a server.
+After setting up the MQTT client options a connection can be established. The following code shows how to connect with a server. The `CancellationToken.None` can be replaced by a valid [CancellationToken](https://docs.microsoft.com/de-de/dotnet/api/system.threading.cancellationtoken?view=netframework-4.8), of course.
 ```csharp
 // Use WebSocket connection.
 var options = new MqttClientOptionsBuilder()
     .WithWebSocketServer("broker.hivemq.com:8000/mqtt")
     .Build();
 
-await mqttClient.ConnectAsync(options);
+await mqttClient.ConnectAsync(options, CancellationToken.None);
 ```
 
 # Reconnecting
-If the connection to the server is lost the _Disconnected_ event is fired. The event is also fired if a call to _ConnectAsync_ has failed because the server is not reachable etc. This allows calling the _ConnectAsync_ method only one time and dealing with retries etc. via consuming the _Disconnected_ event. If the reconnect fails the _Disconnected_ event is fired again. The following code shows how to setup this behavior including a short delay.
+If the connection to the server is lost the _Disconnected_ event is fired. The event is also fired if a call to _ConnectAsync_ has failed because the server is not reachable etc. This allows calling the _ConnectAsync_ method only one time and dealing with retries etc. via consuming the _Disconnected_ event. If the reconnect fails the _Disconnected_ event is fired again. The following code shows how to setup this behavior including a short delay. The `CancellationToken.None` can be replaced by a valid [CancellationToken](https://docs.microsoft.com/de-de/dotnet/api/system.threading.cancellationtoken?view=netframework-4.8), of course.
 ```csharp
 mqttClient.UseDisconnectedHandler(async e =>
 {
@@ -102,7 +102,7 @@ mqttClient.UseDisconnectedHandler(async e =>
 
     try
     {
-        await mqttClient.ConnectAsync(options);
+        await mqttClient.ConnectAsync(options, CancellationToken.None));
     }
     catch
     {
