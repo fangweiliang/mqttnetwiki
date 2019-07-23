@@ -89,20 +89,20 @@ var options = new MqttClientOptionsBuilder()
     .WithWebSocketServer("broker.hivemq.com:8000/mqtt")
     .Build();
 
-await client.ConnectAsync(options);
+await mqttClient.ConnectAsync(options);
 ```
 
 # Reconnecting
 If the connection to the server is lost the _Disconnected_ event is fired. The event is also fired if a call to _ConnectAsync_ has failed because the server is not reachable etc. This allows calling the _ConnectAsync_ method only one time and dealing with retries etc. via consuming the _Disconnected_ event. If the reconnect fails the _Disconnected_ event is fired again. The following code shows how to setup this behavior including a short delay.
 ```csharp
-client.UseDisconnectedHandler(async e =>
+mqttClient.UseDisconnectedHandler(async e =>
 {
     Console.WriteLine("### DISCONNECTED FROM SERVER ###");
     await Task.Delay(TimeSpan.FromSeconds(5));
 
     try
     {
-        await client.ConnectAsync(options);
+        await mqttClient.ConnectAsync(options);
     }
     catch
     {
@@ -113,7 +113,7 @@ client.UseDisconnectedHandler(async e =>
 # Consuming messages
 The following code shows how to handle incoming messages:
 ```csharp
-client.UseApplicationMessageReceivedHandler(e =>
+mqttClient.UseApplicationMessageReceivedHandler(e =>
 {
     Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
     Console.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");
@@ -122,7 +122,7 @@ client.UseApplicationMessageReceivedHandler(e =>
     Console.WriteLine($"+ Retain = {e.ApplicationMessage.Retain}");
     Console.WriteLine();
 
-    Task.Run(() => client.PublishAsync("hello/world"));
+    Task.Run(() => mqttClient.PublishAsync("hello/world"));
 });
 ```
 It is also supported to use an async method instead of a synchronized one like in the above example.
@@ -131,17 +131,17 @@ It is also supported to use an async method instead of a synchronized one like i
 
 # Subscribing to a topic
 Once a connection with the server is established subscribing to a topic is possible. The following code shows how to subscribe to a topic after the MQTT client has connected.
-~~~csharp
-client.UseConnectedHandler(async e =>
+```csharp
+mqttClient.UseConnectedHandler(async e =>
 {
     Console.WriteLine("### CONNECTED WITH SERVER ###");
 
     // Subscribe to a topic
-    await client.SubscribeAsync(new TopicFilterBuilder().WithTopic("my/topic").Build());
+    await mqttClient.SubscribeAsync(new TopicFilterBuilder().WithTopic("my/topic").Build());
 
     Console.WriteLine("### SUBSCRIBED ###");
 });
-~~~
+```
 
 # Publishing messages
 Application messages can be created using the properties directly or via using the _MqttApplicationMessageBuilder_. This class has some useful overloads which allows dealing with different payload formats easily. The API of the builder is a _fluent API_. The following code shows how to compose an application message and publishing them:
@@ -153,7 +153,7 @@ var message = new MqttApplicationMessageBuilder()
     .WithRetainFlag()
     .Build();
 
-await client.PublishAsync(message);
+await mqttClient.PublishAsync(message);
 ```
 It is not required to fill all properties of an application message. The following code shows how to create a very basic application message:
 ```csharp
@@ -179,17 +179,17 @@ The device (Arduino, ESP8266 etc.) which responds to the request needs to parse 
 ```C
 // If using the MQTT client PubSubClient it must be ensured 
 // that the request topic for each method is subscribed like the following.
-_mqttClient.subscribe("MQTTnet.RPC/+/ping");
-_mqttClient.subscribe("MQTTnet.RPC/+/do_something");
+mqttClient.subscribe("MQTTnet.RPC/+/ping");
+mqttClient.subscribe("MQTTnet.RPC/+/do_something");
 
 // It is not allowed to change the structure of the topic.
 // Otherwise RPC will not work.
 // So method names can be separated using an _ or . but no +, # or /.
 // If it is required to distinguish between devices
 // own rules can be defined like the following:
-_mqttClient.subscribe("MQTTnet.RPC/+/deviceA.ping");
-_mqttClient.subscribe("MQTTnet.RPC/+/deviceB.ping");
-_mqttClient.subscribe("MQTTnet.RPC/+/deviceC.getTemperature");
+mqttClient.subscribe("MQTTnet.RPC/+/deviceA.ping");
+mqttClient.subscribe("MQTTnet.RPC/+/deviceB.ping");
+mqttClient.subscribe("MQTTnet.RPC/+/deviceC.getTemperature");
 
 // Within the callback of the MQTT client the topic must be checked
 // if it belongs to MQTTnet RPC. The following code shows one
