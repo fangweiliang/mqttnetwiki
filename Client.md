@@ -89,7 +89,7 @@ var options = new MqttClientOptionsBuilder()
     .WithWebSocketServer("broker.hivemq.com:8000/mqtt")
     .Build();
 
-await mqttClient.ConnectAsync(options, CancellationToken.None);
+await mqttClient.ConnectAsync(options, CancellationToken.None); // Since 3.0.5 with CancellationToken
 ```
 
 # Reconnecting
@@ -102,7 +102,7 @@ mqttClient.UseDisconnectedHandler(async e =>
 
     try
     {
-        await mqttClient.ConnectAsync(options, CancellationToken.None));
+        await mqttClient.ConnectAsync(options, CancellationToken.None)); // Since 3.0.5 with CancellationToken
     }
     catch
     {
