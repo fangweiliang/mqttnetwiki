@@ -7,6 +7,7 @@
 
 ## General:
 * `MqttConnectReturnCode` is now deprecated, use `MqttConnectReasonCode` instead.
+* `ConnectAsync` has now a [CancellationToken](https://docs.microsoft.com/de-de/dotnet/api/system.threading.cancellationtoken?view=netframework-4.8) and can be used like this: `await mqttClient.ConnectAsync(options, CancellationToken.None));`
 
 # From 2.8.5 to 3.0.0:
 
