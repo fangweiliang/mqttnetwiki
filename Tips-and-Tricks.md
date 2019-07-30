@@ -14,6 +14,9 @@ The server (broker) does not distinguish between clients and itself. Every messa
 In Windows IoT Core as well as in UWP, loopback connections (127.0.0.1) are not allowed. If you try to connect to a locally running server (broker), this will fail.
 
 # Special notice for using the server project in Android
+
+Under Android, there is an issue with the default bound IP address. So you have to use the actual address of the device. Check the example below.
+
 ```csharp
 IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
 IPAddress ipAddress = ipHostInfo.AddressList[0];
