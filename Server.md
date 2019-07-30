@@ -61,6 +61,7 @@ var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location
 var certificate = new X509Certificate2(Path.Combine(currentPath, "certificate.pfx"),"yourPassword", X509KeyStorageFlags.Exportable);
 
 var optionsBuilder = new MqttServerOptionsBuilder()
+    .WithoutDefaultEndpoint() // This call disables the default unencrypted endpoint on port 1883
     .WithEncryptedEndpoint()
     .WithEncryptedEndpointPort(config.Port)
     .WithEncryptionCertificate(certificate.Export(X509ContentType.Pfx))
