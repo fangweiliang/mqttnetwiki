@@ -102,7 +102,7 @@ mqttClient.UseDisconnectedHandler(async e =>
 
     try
     {
-        await mqttClient.ConnectAsync(options, CancellationToken.None)); // Since 3.0.5 with CancellationToken
+        await mqttClient.ConnectAsync(options, CancellationToken.None); // Since 3.0.5 with CancellationToken
     }
     catch
     {
