@@ -232,7 +232,7 @@ private static IWebHost BuildWebHost(string[] args) =>
 public void ConfigureServices(IServiceCollection services)
 {
      //this adds a hosted mqtt server to the services
-     services.AddHostedMqttServer();
+     services.AddHostedMqttServer(builder => builder.WithDefaultEndpointPort(1883));
 
      //this adds tcp server support based on Microsoft.AspNetCore.Connections.Abstractions
      services.AddMqttConnectionHandler();
