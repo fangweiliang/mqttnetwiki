@@ -39,15 +39,15 @@
 
 |Method name|Description|Default value|
 |-|-|-|
-|`bool IsConnected`|A value indicating whether the client is connected or not.|`false`|
-|`IMqttClientOptions Options`|The client options set to the client.|`null`|
 |`IMqttClientConnectedHandler ConnectedHandler`|The connected handler to perform actions when the connection is established.|`null`|
 |`IMqttClientDisconnectedHandler DisconnectedHandler`|The disconnected handler to perform actions when the connection is lost.|`null`|
+|`bool IsConnected`|A value indicating whether the client is connected or not.|`false`|
+|`IMqttClientOptions Options`|The client options set to the client.|`null`|
 |`Task<MqttClientAuthenticateResult> ConnectAsync(IMqttClientOptions options, CancellationToken cancellationToken)`|A method to connect the broker.|Does not apply here.|
+|`Task<MqttClientPublishResult> PublishAsync(MqttApplicationMessage applicationMessage, CancellationToken cancellationToken)`|Publishes a message to a topic.|Does not apply here.|
 |`Task SendExtendedAuthenticationExchangeDataAsync(MqttExtendedAuthenticationExchangeData data, CancellationToken cancellationToken`|Sends extended authentication data.|Does not apply here.|
 |`Task<MqttClientSubscribeResult> SubscribeAsync(MqttClientSubscribeOptions options, CancellationToken cancellationToken)`|Subscribes the client to topics.|Does not apply here.|
 |`Task<MqttClientUnsubscribeResult> UnsubscribeAsync(MqttClientUnsubscribeOptions options, CancellationToken cancellationToken)`|Unsubscribes the client from topics.|Does not apply here.|
-|`Task<MqttClientPublishResult> PublishAsync(MqttApplicationMessage applicationMessage, CancellationToken cancellationToken)`|Publishes a message to a topic.|Does not apply here.|
 
 # ManagedClient
 ## ManagedClient options
@@ -67,21 +67,21 @@
 
 |Method name|Description|Default value|
 |-|-|-|
-|`bool IsConnected`|A value indicating whether the client is connected or not.|`false`|
-|`bool IsStarted`|A value indicating whether the client is started or not.|`false`|
-|`int PendingApplicationMessagesCount`|A value that shows the amount of pending application messages.|`0`|
-|`IManagedMqttClientOptions Options`|The managed client options set to the client.|`null`|
-|`IMqttClientConnectedHandler ConnectedHandler`|The connected handler to perform actions when the connection is established.|`null`|
-|`IMqttClientDisconnectedHandler DisconnectedHandler`|The disconnected handler to perform actions when the connection is lost.|`null`|
 |`IApplicationMessageProcessedHandler ApplicationMessageProcessedHandler`|The application message processed handler to perform actions when an application message is processed.|`null`|
 |`IApplicationMessageSkippedHandler ApplicationMessageSkippedHandler`|The application message skipped handler to perform actions when an application message is skipped.|`null`|
+|`IMqttClientConnectedHandler ConnectedHandler`|The connected handler to perform actions when the connection is established.|`null`|
 |`IConnectingFailedHandler ConnectingFailedHandler`|The connecting failed handler to perform actions when the connection failed to be established.|`null`|
+|`IMqttClientDisconnectedHandler DisconnectedHandler`|The disconnected handler to perform actions when the connection is lost.|`null`|
+|`bool IsConnected`|A value indicating whether the client is connected or not.|`false`|
+|`bool IsStarted`|A value indicating whether the client is started or not.|`false`|
+|`IManagedMqttClientOptions Options`|The managed client options set to the client.|`null`|
+|`int PendingApplicationMessagesCount`|A value that shows the amount of pending application messages.|`0`|
 |`ISynchronizingSubscriptionsFailedHandler SynchronizingSubscriptionsFailedHandler`|The synchronizing subscriptions failed handler to perform actions when the synchronization of subscriptions failed.|`null`|
+|`Task PublishAsync(ManagedMqttApplicationMessage applicationMessages)`|Publishes a message to a topic.|Does not apply here.|
 |`Task StartAsync(IManagedMqttClientOptions options)`|A method to start the client.|Does not apply here.|
 |`Task StopAsync()`|A method to stop the client.|Does not apply here.|
 |`Task SubscribeAsync(IEnumerable<TopicFilter> topicFilters)`|Subscribes the client to topics.|Does not apply here.|
 |`Task UnsubscribeAsync(IEnumerable<string> topics)`|Unsubscribes the client from topics.|Does not apply here.|
-|`Task PublishAsync(ManagedMqttApplicationMessage applicationMessages)`|Publishes a message to a topic.|Does not apply here.|
 
 # Server
 
