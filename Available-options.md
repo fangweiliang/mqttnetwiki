@@ -35,6 +35,18 @@
 
 * Remarks: Either `WithTcpServer` or `WithWebSocketServer` or both are required, of course.
 
+## Client methods and properties
+
+|Method name|Description|Default value|
+|`bool IsConnected`|A value indicating whether the client is connected or not.|`false`|
+|`IMqttClientOptions Options`|The client options set to the client.|`null`|
+|`IMqttClientConnectedHandler ConnectedHandler`|The connected handler to perform actions when the connection is established.|`null`|
+|`IMqttClientDisconnectedHandler DisconnectedHandler`|The disconnected handler to perform actions when the connection is lost.|`null`|
+|`Task<MqttClientAuthenticateResult> ConnectAsync(IMqttClientOptions options, CancellationToken cancellationToken)`|A method to connect the client.|Does not apply here.|
+|`Task SendExtendedAuthenticationExchangeDataAsync(MqttExtendedAuthenticationExchangeData data, CancellationToken cancellationToken`|Sends extended authentication data.|Does not apply here.|
+|`Task<MqttClientSubscribeResult> SubscribeAsync(MqttClientSubscribeOptions options, CancellationToken cancellationToken)`|Subscribes the client to a topic.|Does not apply here.|
+|`Task<MqttClientUnsubscribeResult> UnsubscribeAsync(MqttClientUnsubscribeOptions options, CancellationToken cancellationToken)`|Unsubscribes the client from a topic.|Does not apply here.|
+
 # ManagedClient
 ## ManagedClient options
 
