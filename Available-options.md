@@ -6,7 +6,7 @@
 |`Build()`|Builds the options class.|Does not apply here.|
 |`WithAuthentication(string method, byte[] data)`|Allows to use different authentication modes.|`null`|
 |`WithCleanSession(bool value = true)`|Allows to use the client with MQTT clean session support.|`true`|
-|`WithClientId(string value)`|Sets the used client id.|`Guid.NewGuid().ToString("N");`|
+|`WithClientId(string value)`|Sets the used client id.|`Guid.NewGuid().ToString("N")`|
 |`WithCommunicationTimeout(TimeSpan value)`|Sets the communication timeout.|`TimeSpan.FromSeconds(10.0)`|
 |`WithCredentials(string username, string password)`|Sets the login credentials.|`null`, required.|
 |`WithCredentials(string username, byte[] password)`|Sets the login credentials.|`null`, required.|
@@ -85,6 +85,52 @@
 
 # Server
 
+## Server options
+
 |Method name|Description|Default value|
 |-|-|-|
+|`Build()`|Builds the options class.|Does not apply here.|
+|WithApplicationMessageInterceptor(IMqttServerApplicationMessageInterceptor value)|Allows to work with all published messaged from the clients.|`null`|
+|WithApplicationMessageInterceptor(Action<MqttApplicationMessageInterceptorContext> value)|Allows to work with all published messaged from the clients.|`null`|
+|WithClientId(string value)|Sets the client id used for the server.|`Guid.NewGuid().ToString("N")`|
+|WithConnectionBacklog(int value)|Sets the number of connections to keep.|`10`|
+|WithConnectionValidator(IMqttServerConnectionValidator value)|Allows to validate connections with a custom handler.|`null`|
+|WithConnectionValidator(Action<MqttConnectionValidatorContext> value)|Allows to validate connections with a custom handler.|`null`|
+|WithDefaultCommunicationTimeout(TimeSpan value)|Tells the server to use the default communication timeout.|`TimeSpan.FromSeconds(15.0)`|
+|WithDefaultEndpoint()|Tells the server to use the default endpoint.|`0.0.0.0:1883`|
+|WithDefaultEndpointBoundIPAddress(IPAddress value)|Tells the server to use the default endpoint IPv4 address.|`IPAddress.Any`|
+|WithDefaultEndpointBoundIPV6Address(IPAddress value)Tells the server to use the default endpoint IPv6 address.|`IPAddress.IPv6Any`|
+|WithDefaultEndpointPort(int value)|Tells the server to use the default endpoint port.|`1883`|
+|WithEncryptedEndpoint()|Tells the server to use the encrypted endpoint.|Does not apply here.|
+|WithEncryptedEndpointBoundIPAddress(IPAddress value)|Tells the server to use the encrypted endpoint IPv4 address.|`IPAddress.Any`|
+|WithEncryptedEndpointBoundIPV6Address(IPAddress value)|Tells the server to use the encrypted endpoint IPv6 address.|`IPAddress.IPv6Any`|
+|WithEncryptedEndpointPort(int value)|Tells the server to use the encrypted endpoint port.|`8883`|
+|WithEncryptionCertificate(byte[] value)|Tells the server to use the certificate for SSL connections.|`null`|
+|WithEncryptionSslProtocol(SslProtocols value)|Tells the server to use the SSL protocol level.|`SslProtocols.Tls12`|
+|WithMaxPendingMessagesPerClient(int value)|Tells the server to allow a maximum of pending messages per client.|`250`|
+|WithPersistentSessions()|Tells the server to persist sessions.|Does not apply here.|
+|WithStorage(IMqttServerStorage value)|Tells the server to use a storage.|`null`|
+|WithSubscriptionInterceptor(IMqttServerSubscriptionInterceptor value)|Allows to work with all subscriptions from the clients.|`null`|
+|WithSubscriptionInterceptor(Action<MqttSubscriptionInterceptorContext> value)|Allows to work with all subscriptions from the clients.|`null`|
+|WithoutDefaultEndpoint()|Disables the default (non SSL) endpoint.|Does not apply here.|
+|WithoutEncryptedEndpoint()|Disables the default (SSL) endpoint.|Does not apply here.|
+
+## Server methods and properties
+
+|Method name|Description|Default value|
 |-|-|-|
+|IMqttServerClientConnectedHandler ClientConnectedHandler|`The connected handler to perform actions when a client connected.`|`null`|
+|IMqttServerClientDisconnectedHandler ClientDisconnectedHandler|`The disconnected handler to perform actions when a client lost the connection.`|`null`|
+|IMqttServerClientSubscribedTopicHandler ClientSubscribedTopicHandler|`The subscribed handler to perform actions when a client subscribed.`|`null`|
+|IMqttServerClientUnsubscribedTopicHandler ClientUnsubscribedTopicHandler|The subscribed handler to perform actions when a client unsubscribed.|`null`|
+|IMqttServerOptions Options|The server options set to the client.|`null`|
+|IMqttServerStartedHandler StartedHandler|`The started handler to perform actions when the server started.`|`null`|
+|IMqttServerStoppedHandler StoppedHandler|`The stopped handler to perform actions when the server stopped.`|`null`|
+|Task ClearRetainedApplicationMessagesAsync()|Clears the retained application messages.|Does not apply here.|
+|Task<IList<IMqttClientStatus>> GetClientStatusAsync()|Gets the client status.|Does not apply here.|
+|Task<IList<MqttApplicationMessage>> GetRetainedApplicationMessagesAsync()|Gets tge retained application messages.|Does not apply here.|
+|Task<IList<IMqttSessionStatus>> GetSessionStatusAsync()|Gets the session status.|Does not apply here.|
+|Task StartAsync(IMqttServerOptions options)|Starts the server.|Does not apply here.|
+|Task StopAsync()|Stops the server.|Does not apply here.|
+|Task SubscribeAsync(string clientId, ICollection<TopicFilter> topicFilters)|Subscribes the server to topics.|Does not apply here.|
+|Task UnsubscribeAsync(string clientId, ICollection<string> topicFilters)|Unsubscribes the server from topics|Does not apply here.|
