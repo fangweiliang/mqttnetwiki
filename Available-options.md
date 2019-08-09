@@ -1,4 +1,5 @@
-# Client options
+# Client
+## Client options
 
 |Method name|Description|Default value|
 |-|-|-|
@@ -35,10 +36,18 @@
 * Remarks: Either `WithTcpServer` or `WithWebSocketServer` or both are required, of course.
 
 # ManagedClient
+## ManagedClient options
 
 |Method name|Description|
-|-|-|
-|-|-|
+|-|-|-|
+|`Build()`|Builds the options class.|Does not apply here.|
+|`WithAutoReconnectDelay(TimeSpan value)`|Sets the auto-reconnect delay.|`TimeSpan.FromSeconds(5.0)`|
+|`WithClientOptions(IMqttClientOptions value)`|Tells the managed client to use the configuration available under **Client options**|`null`|
+|`WithClientOptions(MqttClientOptionsBuilder builder)`|Tells the managed client to use the configuration available under **Client options**|`null`|
+|`WithClientOptions(Action<MqttClientOptionsBuilder> options)`|Tells the managed client to use the configuration available under **Client options**|`null`|
+|`WithMaxPendingMessages(int value)`|Tells the client to use the number as maximum amount of pending messages.|`int.MaxValue`|
+|`WithPendingMessagesOverflowStrategy(MqttPendingMessagesOverflowStrategy value)`|Tells the client which message overflow strategy should be used.|`MqttPendingMessagesOverflowStrategy.DropNewMessage`|
+|`WithStorage(IManagedMqttClientStorage value)`|Tells the client which storage to use.|`null`|
 
 # Server
 
