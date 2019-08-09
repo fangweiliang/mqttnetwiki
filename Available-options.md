@@ -38,13 +38,13 @@
 # ManagedClient
 ## ManagedClient options
 
-|Method name|Description|
+|Method name|Description|-|
 |-|-|-|
 |`Build()`|Builds the options class.|Does not apply here.|
 |`WithAutoReconnectDelay(TimeSpan value)`|Sets the auto-reconnect delay.|`TimeSpan.FromSeconds(5.0)`|
-|`WithClientOptions(IMqttClientOptions value)`|Tells the managed client to use the configuration available under **Client options**|`null`|
-|`WithClientOptions(MqttClientOptionsBuilder builder)`|Tells the managed client to use the configuration available under **Client options**|`null`|
-|`WithClientOptions(Action<MqttClientOptionsBuilder> options)`|Tells the managed client to use the configuration available under **Client options**|`null`|
+|`WithClientOptions(IMqttClientOptions value)`|Tells the managed client to use the configuration available under [Client options](https://github.com/chkr1011/MQTTnet/wiki/Available-options#client-options)|`null`|
+|`WithClientOptions(MqttClientOptionsBuilder builder)`|Tells the managed client to use the configuration available under [Client options](https://github.com/chkr1011/MQTTnet/wiki/Available-options#client-options)|`null`|
+|`WithClientOptions(Action<MqttClientOptionsBuilder> options)`|Tells the managed client to use the configuration available under [Client options](https://github.com/chkr1011/MQTTnet/wiki/Available-options#client-options)|`null`|
 |`WithMaxPendingMessages(int value)`|Tells the client to use the number as maximum amount of pending messages.|`int.MaxValue`|
 |`WithPendingMessagesOverflowStrategy(MqttPendingMessagesOverflowStrategy value)`|Tells the client which message overflow strategy should be used.|`MqttPendingMessagesOverflowStrategy.DropNewMessage`|
 |`WithStorage(IManagedMqttClientStorage value)`|Tells the client which storage to use.|`null`|
