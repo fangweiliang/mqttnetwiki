@@ -38,6 +38,7 @@
 ## Client methods and properties
 
 |Method name|Description|Default value|
+|-|-|-|
 |`bool IsConnected`|A value indicating whether the client is connected or not.|`false`|
 |`IMqttClientOptions Options`|The client options set to the client.|`null`|
 |`IMqttClientConnectedHandler ConnectedHandler`|The connected handler to perform actions when the connection is established.|`null`|
@@ -50,7 +51,7 @@
 # ManagedClient
 ## ManagedClient options
 
-|Method name|Description|-|
+|Method name|Description|Default value|
 |-|-|-|
 |`Build()`|Builds the options class.|Does not apply here.|
 |`WithAutoReconnectDelay(TimeSpan value)`|Sets the auto-reconnect delay.|`TimeSpan.FromSeconds(5.0)`|
@@ -63,6 +64,6 @@
 
 # Server
 
-|Method name|Description|
-|-|-|
-|-|-|
+|Method name|Description|Default value|
+|-|-|-|
+|-|-|-|
