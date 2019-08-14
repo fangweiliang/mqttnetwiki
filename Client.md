@@ -50,6 +50,7 @@ In order to deal with special certificate errors a special validation callback i
 var options = new MqttClientOptionsBuilder()
     .WithTls(new MqttClientOptionsBuilderTlsParameters
     {
+        UseTls = true,
         CertificateValidationCallback = (X509Certificate x, X509Chain y, SslPolicyErrors z, IMqttClientOptions o) =>
             {
                 // TODO: Check conditions of certificate by using above parameters.
