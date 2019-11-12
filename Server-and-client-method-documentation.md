@@ -128,7 +128,7 @@
 |IMqttServerStoppedHandler StoppedHandler|`The stopped handler to perform actions when the server stopped.`|`null`|
 |Task ClearRetainedApplicationMessagesAsync()|Clears the retained application messages.|Does not apply here.|
 |Task<IList<IMqttClientStatus>> GetClientStatusAsync()|Gets the client status.|Does not apply here.|
-|Task<IList<MqttApplicationMessage>> GetRetainedApplicationMessagesAsync()|Gets tge retained application messages.|Does not apply here.|
+|Task<IList<MqttApplicationMessage>> GetRetainedApplicationMessagesAsync()|Gets the retained application messages.|Does not apply here.|
 |Task<IList<IMqttSessionStatus>> GetSessionStatusAsync()|Gets the session status.|Does not apply here.|
 |Task StartAsync(IMqttServerOptions options)|Starts the server.|Does not apply here.|
 |Task StopAsync()|Stops the server.|Does not apply here.|
