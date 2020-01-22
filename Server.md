@@ -29,23 +29,23 @@ var optionsBuilder = new MqttServerOptionsBuilder()
 {
     if (c.ClientId.Length < 10)
     {
-        c.ReturnCode = MqttConnectReturnCode.ConnectionRefusedIdentifierRejected;
+        c.ReasonCode = MqttConnectReasonCode.ClientIdentifierNotValid;
         return;
     }
 
     if (c.Username != "mySecretUser")
     {
-        c.ReturnCode = MqttConnectReturnCode.ConnectionRefusedBadUsernameOrPassword;
+        c.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
         return;
     }
 
     if (c.Password != "mySecretPassword")
     {
-        c.ReturnCode = MqttConnectReturnCode.ConnectionRefusedBadUsernameOrPassword;
+        c.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
         return;
     }
 
-    c.ReturnCode = MqttConnectReturnCode.ConnectionAccepted;
+    c.ReasonCode = MqttConnectReasonCode.Success;
 });
 ```
 
@@ -142,7 +142,7 @@ var optionsBuilder = new MqttServerOptionsBuilder()
         // It is possible to disallow the sending of messages for a certain client id like this:
         if (context.ClientId != "Someone")
         {
-            c.AcceptPublish = false;
+            context.AcceptPublish = false;
             return;
         }
         // It is also possible to read the payload and extend it. For example by adding a timestamp in a JSON document.
