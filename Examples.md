@@ -8,4 +8,5 @@
 |Check user credentials with topic restriction from a database in the MQTTnet.Server.|[Link](https://github.com/SeppPenner/NetCoreMQTTExampleDapperConfig)|
 |Simple WinForms server application (By [@grammyleung](https://github.com/grammyleung)).|[Link](https://github.com/SeppPenner/MQTTnet.TestApp.SimpleServer)|
 |Simple WinForms client application (By [@grammyleung](https://github.com/grammyleung)).|[Link](https://github.com/SeppPenner/MQTTnet.TestApp.WinForm)|
-|Simple MQTT server.|[Link](https://github.com/SeppPenner/SimpleMqttServer)|
+|A simple MQTT server.|[Link](https://github.com/SeppPenner/SimpleMqttServer)|
+|A simple MQTT bridge.|[Link](https://github.com/SeppPenner/MqttBridge)|
